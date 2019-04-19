@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta content="yes" name="apple-mobile-web-app-capable" >
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" >
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>vchat</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="//images2015.cnblogs.com/blog/528573/201609/528573-20160902122329902-1531110925.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="//images2015.cnblogs.com/blog/528573/201609/528573-20160902122334215-1428383567.png">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1148199_dydr2d0g8kp.css">
+    <style>
+      .welcome {
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        position: fixed;
+        left: 0;
+        top: 0;
+        transition: all 1s linear;
+        background: url(/launch.png) no-repeat center center;
+        background-size: cover;
+        opacity: 1;
+      }
+      .away {
+        opacity: 0;
+        transform: scale(1.5);
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>
+      <strong>We're sorry but vchat doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+
+    <!--mask layer--> 
+    <!-- <div class="welcome" id="welcome"></div>
+    <script>
+      (function() {
+        'use strict';
+
+        var welcome = document.getElementById('welcome');
+        setTimeout(function() {
+          welcome.classList.add('away');
+        }, 2000);
+        setTimeout(function() {
+          welcome.parentNode.removeChild(welcome);
+        }, 3000);
+      })();
+    </script> -->
+
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
