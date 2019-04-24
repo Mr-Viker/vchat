@@ -1,20 +1,10 @@
 <template>
-  <section class="page contact-page">
-    <!-- <mt-search v-model="value"></mt-search> -->
+  <section class="page contact-page page-has-search">
+    <v-search></v-search>
 
     <mt-index-list>
       <mt-index-section index="A">
         <mt-cell title="Aaron" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
-        <mt-cell title="Alden" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
-        <mt-cell title="Austin" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
-      </mt-index-section>
-      <mt-index-section index="B">
-        <mt-cell title="Baldwin" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
-        <mt-cell title="Braden" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
-      </mt-index-section>
-      <mt-index-section index="Z">
-        <mt-cell title="Zack" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
-        <mt-cell title="Zane" class='v-cell'><img slot="icon" src="../../assets/img/person/logo.jpg" class='img-head'></mt-cell>
       </mt-index-section>
     </mt-index-list>
   </section>
@@ -22,11 +12,32 @@
 
 
 <script>
+import VSearch from '@/components/VSearch';
+
 export default {
   name: 'Contact',
+  components: {VSearch},
   data() {
     return {
-      value: '',
+      contactList: [],
+    }
+  },
+
+  created() {
+    this.getContactList();
+  },
+
+  methods: {
+    // 获取通讯录列表
+    getContactList() {
+      this.$api.getContactList()
+      .then(res => {
+        if (res.code == '00') {
+          this.contactList = res.data;
+        } else {
+          this.$toast(res.msg);
+        }
+      })
     }
   }
 

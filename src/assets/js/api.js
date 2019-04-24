@@ -67,4 +67,12 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+
+  // 通讯录列表
+  getContactList(params) {
+    return axios.post('/contact/list', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
 }
