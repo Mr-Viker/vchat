@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <v-header :title='title' v-if='showHd'>
-      <mt-button icon="back" slot='left' v-if='showBack'>返回</mt-button>
-    </v-header>
+    <v-header :title='title' v-if='showHd' :show-back='showBack'></v-header>
 
     <router-view :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/>
 

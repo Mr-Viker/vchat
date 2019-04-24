@@ -1,30 +1,28 @@
 <template>
-  <section class="page register-page">
+  <section class="page forget-page">
 
     <div class="page-hd"><img class="img-logo" src="../../assets/img/person/logo.jpg"></div>
-    
+
     <div class="page-bd">
-      <form @submit.prevent='register' novalidate>
-        <mt-field class='input-container' v-model="form.username" type='text' placeholder='请输入用户名'></mt-field>
+      <form @submit.prevent='submit' novalidate>
         <mt-field class='input-container' v-model="form.phone" type='tel' placeholder='请输入手机号码'></mt-field>
         <mt-field class='input-container captcha-container' v-model="form.smsCode" type='text' placeholder='请输入验证码'>
           <button v-if='leftTime <= 0' class="mint-button btn-captcha mint-button--normal" type='button' @click='getSms'>获取短信验证码</button>
           <button v-else class="mint-button btn-show-captcha mint-button--normal" type='button' disabled>{{leftTime}}s后重新获取</button>
         </mt-field>
-        <mt-field class='input-container' v-model="form.password" type='password' placeholder='请输入密码(6~16位字母和数字组合)'></mt-field>
+        <mt-field class='input-container' v-model="form.password" type='password' placeholder='请输入新密码(6~16位字母和数字组合)'></mt-field>
 
-        <input type="submit" class="mint-button btn-primary mint-button--primary mint-button--large" value="立刻注册">
+        <input type="submit" class="mint-button btn-primary mint-button--primary mint-button--large" value="确 定">
       </form>
-
-      <router-link class="btn-to-login text-center" to='/login'>已有账号？立即登录</router-link>
     </div>
+
   </section>
 </template>
 
 
 <script>
 export default {
-  name: 'Register',
+  name: 'ForgetPassword',
   data() {
     return {
       form: {
@@ -32,8 +30,8 @@ export default {
         smsCode: '',
         password: '',
       },
-      leftTime: 0, //短信验证码倒计时
       timer: '', //计时器
+      leftTime: 0,
     }
   },
 
@@ -42,7 +40,7 @@ export default {
     getSms() {
       var smsForm = {
         phone: this.form.phone,
-        type: 0,
+        type: 1,
       };
       if (this.validate(smsForm)) {
         this.$api.getSms(smsForm)
@@ -65,12 +63,12 @@ export default {
     },
 
     // 表单提交
-    register(ev) {
+    submit() {
       if (this.validate(this.form)) {
-        this.$api.register(this.form)
+        this.$api.forgetPassword(this.form)
         .then(res => {
           if (res.code === '00') {
-            this.$toast('注册成功');
+            this.$toast({message: '修改成功', duration: 1500});
             setTimeout(() => {
               this.$router.push({name: 'Login'});
             }, 1500);
@@ -80,8 +78,15 @@ export default {
         })
       }
     },
+  },
 
-
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      // 通过 `vm` 访问组件实例
+      if (vm.$store.state.hasLogin) {
+        vm.$router.back();
+      }
+    })
   },
 }
 </script>
@@ -90,7 +95,7 @@ export default {
 <style lang='less'>
 @import '../../assets/css/_variable.less';
 
-.register-page {
+.forget-page {
   .page-hd {
     height: 2rem;
     .img-logo {
@@ -120,12 +125,6 @@ export default {
     .btn-primary {
       margin-top: .2rem;
       background-color: @green;
-    }
-    .btn-to-login {
-      display: block;
-      margin-top: .4rem;
-      text-align: center;
-      color: @blue;
     }
   }
 }

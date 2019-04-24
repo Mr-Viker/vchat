@@ -44,6 +44,7 @@ export default {
 @import '../assets/css/_variable.less';
 
 .v-tabbar {
+  position: fixed;
   background: #f9f9f9;
   border-top: 1px solid @border-c;
   color: #929292;

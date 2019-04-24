@@ -31,8 +31,6 @@ body {
 }
 
 
-
-
 .text-l {
   text-align: left;
 }
@@ -41,6 +39,11 @@ body {
 }
 .text-r {
   text-align: right;
+}
+.text-e {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 
@@ -52,4 +55,24 @@ body {
 }
 .v-cell:last-child {
   background-image: none;
+}
+.mint-cell-wrapper {
+  font-size: 14px;
+}
+.picker-toolbar {
+  border-bottom: 1px solid #ececec;
+}
+
+
+/* img */
+.img-avatar {
+  display: inline-block;
+  width: .6rem;
+  height: .6rem;
+  border-radius: .05rem;
+  border: 1px solid #ececec;
+}
+.img-head {
+  width: .35rem;
+  height: .35rem;
 }

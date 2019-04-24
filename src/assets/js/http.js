@@ -30,7 +30,7 @@ var instance = axios.create({
   // `headers` 是即将被发送的自定义请求头
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
-    'token': window.localStorage.getItem('token') ? 'bearer ' + window.localStorage.getItem('token') : '',
+    // 'token': window.localStorage.getItem('token') ? 'bearer ' + window.localStorage.getItem('token') : '',
     post: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     }
@@ -179,5 +179,9 @@ function transformRequestData(obj) {
     return queryData.length ? queryData.substr(0, queryData.length - 1) : queryData;
 }
 
-
+if (window.localStorage.getItem('token')) {
+  instance.defaults.headers.token = 'bearer ' + window.localStorage.getItem('token');
+} else {
+  delete instance.defaults.headers.token;
+}
 export default instance

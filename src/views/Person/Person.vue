@@ -1,9 +1,10 @@
 <template>
   <section class="page person-page">
     <div class="page-hd">
-      <mt-cell title="Viker" label="微信号：zzx_454502552" to="/personal" is-link class='hd-cell'>
-        <img slot="icon" src="../../assets/img/launch.png" class='img-face'>
-        <span><img src="../../assets/img/person/qrcode.png" class="img-qrcode" alt=""></span>
+      <mt-cell :title="userInfo.username" :label="'微信号：' + userInfo.vchat_id" to="/personal" is-link class='hd-cell'>
+        <img slot="icon" :src="getImgURL(userInfo.avatar)" class='img-avatar' v-if='userInfo.avatar'>
+        <img slot="icon" src="../../assets/img/person/user-default.jpeg" alt="" class="img-avatar" v-else>
+        <!-- <span><img src="../../assets/img/person/qrcode.png" class="img-qrcode" alt=""></span> -->
       </mt-cell>
     </div>
 
@@ -12,11 +13,14 @@
         <img slot="icon" :src="item.img" width="24" height="24">
       </mt-cell>
     </div>
+
   </section>
 </template>
 
 
 <script>
+import {mapState} from 'vuex';
+
 export default {
   name: 'Person',
   data() {
@@ -27,10 +31,23 @@ export default {
         { id: 'wallet', title: '钱包', img: require('@/assets/img/person/wallet.png'), url: '/wallet' },
         { id: 'card', title: '卡包', img: require('@/assets/img/person/card.png'), url: '/card' },
         { id: 'face', title: '表情', img: require('@/assets/img/person/face.png'), url: '/face' },
-        { id: 'setting', title: '设置', img: require('@/assets/img/person/setting.png'), url: '/setting' },
-      ]
+        { id: 'setting', title: '设置', img: require('@/assets/img/person/setting.png'), url: '/personal' },
+      ],
     }
-  }
+  },
+
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo,
+      config: state => state.config,
+    }),
+  },
+
+  created() {
+    if(window.localStorage.getItem('token')) {
+      this.getUserInfo();
+    }
+  },
 }
 </script>
 
@@ -46,13 +63,6 @@ export default {
       padding: .1rem .05rem;
       background-image: none;
     }
-    .img-face {
-      display: inline-block;
-      width: .6rem;
-      height: .6rem;
-      border-radius: .05rem;
-      border: 1px solid @border-c;
-    }
     .img-qrcode {
       display: inline-block;
       width: .25rem;
@@ -61,13 +71,16 @@ export default {
     .mint-cell-text {
       display: inline-block;
       margin-bottom: 0.2rem;
-      font-size: .18rem;
+      font-size: .16rem;
     }
     .mint-cell-label {
       position: absolute;
       top: .4rem;
       left: .8rem;
-      font-size: .14rem;
+      width: 2.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

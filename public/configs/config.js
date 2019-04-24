@@ -8,6 +8,6 @@ export default {
   // baseURL: 'http://182.254.185.182/api',
 
   //图片请求地址前缀, 除非 `url` 是一个绝对 URL。
-  baseImgURL: 'http://vchat.com/uploads/',
+  baseImgURL: 'http://vchat.com/upload/',
   // baseImgURL: 'http://182.254.185.182/upload/',
 }
