@@ -11,6 +11,9 @@ export default new Vuex.Store({
     config: {}, //系统配置
     hasLogin: false, //登录状态
     userInfo: {}, //用户信息
+    contactList: null, //通讯录列表
+    chatNum: 0, //最新消息数
+    addContactNum: 0, //最新添加好友请求消息数
   },
 
   mutations: {
@@ -31,6 +34,19 @@ export default new Vuex.Store({
         state.userInfo[key] = payload[key];
       }
     },
+
+    setContactList(state, payload) {
+      state.contactList = payload;
+    },
+
+    setNewChatNum(state, payload) {
+      state.chatNum = payload;
+    },
+
+    setNewAddContactNum(state, payload) {
+      state.addContactNum = payload;
+    },
+
   },
 
   actions: {

@@ -495,3 +495,5 @@ function getPinYinFirstCharacter(str, split,uppercase) {
   result = result.replace(split,"");
   return result.trim();
 }
+
+export {isChinese, getPinYinFirstCharacter};

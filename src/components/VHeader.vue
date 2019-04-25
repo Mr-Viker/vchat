@@ -1,6 +1,6 @@
 <template>
   <mt-header fixed :title="title" class='v-header'>
-    <span slot='left'><mt-button icon="back" slot='left' v-if='showBack' @click.native='back'>返回</mt-button></span>
+    <span slot='left'><mt-button icon="back" slot='left' v-if='showBack' @click.native='back'></mt-button></span>
     <span slot='right'><slot name='right'></slot></span>
   </mt-header>
 </template>
@@ -30,7 +30,9 @@ export default {
 
 .v-header {
   height: .46rem;
-  background: linear-gradient(to bottom, #303036, #3c3b40);
+  // background: linear-gradient(to bottom, #303036, #3c3b40);
+  background-color: @bgc;
+  color: @black;
   .mint-header-title {
     font-size: .16rem;
   }

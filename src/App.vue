@@ -26,7 +26,7 @@ export default {
     this.getConfig()
     .then(res => {
       if (window.localStorage.getItem('token')) {
-        return this.getUserInfo();
+        this.getUserInfo();
       }
       return res;
     }).then(res => {
@@ -69,6 +69,7 @@ export default {
         window.scrollTo(0, 0);
       })
     },
+
   }
 }
 </script>

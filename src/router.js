@@ -4,6 +4,10 @@ import Router from 'vue-router'
 import Chat from '@/views/Chat/Chat'
 
 import Contact from '@/views/Contact/Contact'
+const NewFriend = () => import('@/views/Contact/NewFriend')
+const AddContact = () => import('@/views/Contact/AddContact')
+const PersonalDetail = () => import('@/views/Contact/PersonalDetail')
+
 
 import Find from '@/views/Find/Find'
 
@@ -123,6 +127,42 @@ export default new Router({
       component: ChangePassword,
       meta: {
         title: '修改密码',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/newFriend',
+      name: 'NewFriend',
+      component: NewFriend,
+      meta: {
+        title: '新的朋友',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/addContact',
+      name: 'AddContact',
+      component: AddContact,
+      meta: {
+        title: '添加好友',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/personalDetail',
+      name: 'PersonalDetail',
+      component: PersonalDetail,
+      meta: {
+        title: '',
         showHd: true,
         showTab: false,
         showBack: true,

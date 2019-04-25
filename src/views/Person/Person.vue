@@ -57,7 +57,7 @@ export default {
   
 .person-page {
   .page-hd {
-    margin: .2rem 0;
+    margin: 0 0 .2rem;
     .hd-cell {
       position: relative;
       padding: .1rem .05rem;

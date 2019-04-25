@@ -1,14 +1,13 @@
 <template>
-  <section class="page contact-page page-has-search">
+  <section class="page add-contact-page page-has-search">
     <!-- 右上角添加联系人图标 -->
-    <i class="iconfont icon-jiahaoyou icon-add-contact" @click='$router.push({name: "AddContact"})'></i>
 
     <v-search></v-search>
 
     <div class="page-bd">
       <mt-index-list>
         <!-- 上方四个选项 -->
-        <mt-cell :title="item.title" :to='item.url' class='v-cell' v-for='item in hds' :key='item.title' :value='item.title == "新的朋友" ? "0" : ""'><img slot="icon" :src="item.img" class='img-head'></mt-cell>
+        <mt-cell :title="item.title" :to='item.url' class='v-cell' v-for='item in hds' :key='item.title'><img slot="icon" :src="item.img" class='img-head'></mt-cell>
 
         <mt-index-section :index="key" v-for='(contacts, key) in contactList' :key='key'>
           <mt-cell :title="item.username" class='v-cell' v-for='item in contacts' :key='item.id'><img slot="icon" :src="getImgURL(item.avatar)" class='img-head'></mt-cell>
@@ -24,12 +23,12 @@ import VSearch from '@/components/VSearch';
 import {isChinese, getPinYinFirstCharacter} from '@/assets/js/pinyin';
 
 export default {
-  name: 'Contact',
+  name: 'AddContact',
   components: {VSearch},
   data() {
     return {
       hds: [
-        {title: '新的朋友', img: require('../../assets/img/contact/contact_top-friend-notify.png'), url: '/newFriend'},
+        {title: '新的朋友', img: require('../../assets/img/contact/contact_top-friend-notify.png'), url: '/addContact'},
         {title: '群聊', img: require('../../assets/img/contact/contact_top-addgroup.png'), url: '/group'},
         {title: '标签', img: require('../../assets/img/contact/contact_top-tag.png'), url: '/tag'},
         {title: '公众号', img: require('../../assets/img/contact/contact_top-offical.png'), url: '/office'},

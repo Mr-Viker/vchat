@@ -67,12 +67,40 @@ export default {
     .catch(err => console.log(err)); 
   },
 
-
   // 通讯录列表
   getContactList(params) {
     return axios.post('/contact/list', params)
     .then(res => res.data)
     .catch(err => console.log(err)); 
   },
+
+  // 添加通讯录好友请求列表
+  getAddContactList(params) {
+    return axios.post('/contact/addList', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 添加通讯录好友请求列表
+  editAddContact(params) {
+    return axios.post('/contact/editAddContact', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 获取最新消息数
+  getNewChatNum(params) {
+    return axios.post('/chat/getNewChatNum', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 获取最新添加好友请求消息数
+  getNewAddContactNum(params) {
+    return axios.post('/contact/getNewAddContactNum', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
 
 }

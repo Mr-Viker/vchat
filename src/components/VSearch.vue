@@ -8,7 +8,7 @@ export default {
   name: 'VSearch',
   data() {
     return {
-      
+      value: '',
     };
   },
 
