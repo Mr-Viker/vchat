@@ -1,8 +1,8 @@
 <template>
   <mt-tabbar v-model="selected" class='v-tabbar'>
     <mt-tab-item :id="item.id" v-for='item in tabs' :key='item.id' @click.native='goto(item.link)'>
-      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "微信" && chatNum > 0'>{{chatNum}}</mt-badge>
-      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "通讯录" && addContactNum > 0'>{{addContactNum}}</mt-badge>
+      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "微信" && newChatNum > 0'>{{newChatNum}}</mt-badge>
+      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "通讯录" && newAddContactNum > 0'>{{newAddContactNum}}</mt-badge>
       <i :class="['iconfont', item.icon]" slot='icon'></i>
       {{item.title}}
     </mt-tab-item>
@@ -34,49 +34,12 @@ export default {
       set(val) {}
     },
     ...mapState({
-      chatNum: state => state.chatNum, //最新消息数
-      addContactNum: state => state.addContactNum, //最新添加好友请求消息数
+      newChatNum: state => state.newChatNum, //最新消息数
+      newAddContactNum: state => state.newAddContactNum, //最新添加好友请求消息数
     })
-  },
-  
-  created() {
-    if (window.localStorage.getItem('token')) {
-      this.getNewChatNum(); // 获取最新消息数
-      this.getNewAddContactNum(); //获取最新添加好友请求消息数
-    }
   },
 
   methods: {
-    // 获取最新消息数
-    getNewChatNum() {
-      this.$api.getNewChatNum()
-      .then(res => {
-        if (res.code == '00') {
-          if (res.data != 0) {
-            this.$store.commit('setNewChatNum', res.data);
-            this.showChatBage = true;
-          }
-        } else {
-          this.$toast(res.msg);
-        }
-      })
-    },
-
-    // 获取最新添加好友请求消息数
-    getNewAddContactNum() {
-      this.$api.getNewAddContactNum()
-      .then(res => {
-        if (res.code == '00') {
-          if (res.data != 0) {
-            this.$store.commit('setNewAddContactNum', res.data);
-            this.showContactBage = true;
-          }
-        } else {
-          this.$toast(res.msg);
-        }
-      })
-    },
-
     goto(url) {
       return this.$router.replace({path: url});
     }

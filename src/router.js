@@ -34,7 +34,7 @@ export default new Router({
         showHd: true,
         showTab: true,
         showBack: false,
-        requireAuth: false,
+        requireAuth: true,
       }
     },
     {
@@ -46,7 +46,7 @@ export default new Router({
         showHd: true,
         showTab: true,
         showBack: false,
-        requireAuth: false,
+        requireAuth: true,
       }
     },
     {
@@ -58,7 +58,7 @@ export default new Router({
         showHd: true,
         showTab: true,
         showBack: false,
-        requireAuth: false,
+        requireAuth: true,
       }
     },
     {

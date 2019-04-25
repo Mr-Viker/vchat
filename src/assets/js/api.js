@@ -102,5 +102,11 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 告知已读添加请求列表
+  readAddContact(params) {
+    return axios.post('/contact/readAddContact', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
 
 }

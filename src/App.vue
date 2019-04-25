@@ -26,7 +26,13 @@ export default {
     this.getConfig()
     .then(res => {
       if (window.localStorage.getItem('token')) {
-        this.getUserInfo();
+        return this.getUserInfo();
+      }
+      return res;
+    }).then(res => {
+      if (window.localStorage.getItem('token')) {
+        this.getNewChatNum(); // 获取最新消息数
+        this.getNewAddContactNum(); //获取最新添加好友请求消息数
       }
       return res;
     }).then(res => {
@@ -70,6 +76,36 @@ export default {
       })
     },
 
+    // 获取最新消息数
+    getNewChatNum() {
+      return this.$api.getNewChatNum()
+      .then(res => {
+        if (res.code == '00') {
+          if (res.data != 0) {
+            this.$store.commit('setNewChatNum', res.data);
+          }
+        } else {
+          this.$toast(res.msg);
+        }
+        return res;
+      })
+    },
+
+    // 获取最新添加好友请求消息数
+    getNewAddContactNum() {
+      return this.$api.getNewAddContactNum()
+      .then(res => {
+        if (res.code == '00') {
+          if (res.data != 0) {
+            this.$store.commit('setNewAddContactNum', res.data);
+          }
+        } else {
+          this.$toast(res.msg);
+        }
+        return res;
+      })
+    },
+    
   }
 }
 </script>

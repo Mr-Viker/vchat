@@ -25,6 +25,7 @@
 
 <script>
 import VSearch from '@/components/VSearch';
+import {mapState} from 'vuex';
 
 export default {
   name: 'NewFriend',
@@ -38,15 +39,28 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState({
+      newAddContactNum: state => state.newAddContactNum,
+    })
+  },
+
   created() {
     this.getAddContactList();
-    this.readAddContact();
+    if (this.newAddContactNum > 0) {
+      this.readAddContact();
+    }
   },
 
   methods: {
     // 告知已读添加请求列表
     readAddContact() {
-      
+      this.$api.readAddContact()
+      .then(res => {
+        if (res.code == '00') {
+          this.$store.commit('setNewAddContactNum', 0);
+        }
+      })
     },
 
     // 获取添加通讯录好友请求列表
