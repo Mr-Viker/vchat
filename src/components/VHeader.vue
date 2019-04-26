@@ -33,6 +33,7 @@ export default {
   // background: linear-gradient(to bottom, #303036, #3c3b40);
   background-color: @bgc;
   color: @black;
+  z-index: 100 !important;
   .mint-header-title {
     font-size: .16rem;
   }

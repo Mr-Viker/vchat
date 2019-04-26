@@ -58,6 +58,8 @@ export default {
 .person-page {
   .page-hd {
     margin: 0 0 .2rem;
+    padding: .3rem 0 .2rem;
+    background-color: #fff;
     .hd-cell {
       position: relative;
       padding: .1rem .05rem;

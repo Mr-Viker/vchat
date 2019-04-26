@@ -1,7 +1,7 @@
 <template>
   <mt-tabbar v-model="selected" class='v-tabbar'>
     <mt-tab-item :id="item.id" v-for='item in tabs' :key='item.id' @click.native='goto(item.link)'>
-      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "微信" && newChatNum > 0'>{{newChatNum}}</mt-badge>
+      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "聊天" && newChatNum > 0'>{{newChatNum}}</mt-badge>
       <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "通讯录" && newAddContactNum > 0'>{{newAddContactNum}}</mt-badge>
       <i :class="['iconfont', item.icon]" slot='icon'></i>
       {{item.title}}
@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       tabs: [
-        { id: '/', title: '微信', icon: 'icon-duihua', link: '/' },
+        { id: '/', title: '聊天', icon: 'icon-duihua', link: '/' },
         { id: '/contact', title: '通讯录', icon: 'icon-tongxunlu', link: '/contact' },
         { id: '/find', title: '发现', icon: 'icon-zhinanzhen', link: '/find' },
         { id: '/person', title: '我', icon: 'icon-wo', link: '/person' },
@@ -53,6 +53,7 @@ export default {
 
 .v-tabbar {
   position: fixed;
+  z-index: 100;
   background: #f9f9f9;
   border-top: 1px solid @border-c;
   color: #929292;

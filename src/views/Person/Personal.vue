@@ -21,7 +21,7 @@
     </div>
 
     <div class="btn-submit-container">
-      <mt-button type="danger" size='large' class='btn-primary' @click='logout'>退出登录</mt-button>
+      <mt-button type="danger" size='large' class='btn-primary' @click.native='logout'>退出登录</mt-button>
     </div>
     
 

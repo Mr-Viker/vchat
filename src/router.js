@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Chat from '@/views/Chat/Chat'
+import ChatList from '@/views/Chat/ChatList'
+const Chat = () => import('@/views/Chat/Chat')
+
 
 import Contact from '@/views/Contact/Contact'
 const NewFriend = () => import('@/views/Contact/NewFriend')
@@ -27,10 +29,10 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Chat',
-      component: Chat,
+      name: 'ChatList',
+      component: ChatList,
       meta: {
-        title: '微信',
+        title: '聊天',
         showHd: true,
         showTab: true,
         showBack: false,
@@ -67,7 +69,7 @@ export default new Router({
       component: Person,
       meta: {
         title: '我',
-        showHd: true,
+        showHd: false,
         showTab: true,
         showBack: false,
         requireAuth: true,
@@ -162,8 +164,8 @@ export default new Router({
       name: 'PersonalDetail',
       component: PersonalDetail,
       meta: {
-        title: '',
-        showHd: true,
+        title: '详细资料',
+        showHd: false,
         showTab: false,
         showBack: true,
         requireAuth: true,

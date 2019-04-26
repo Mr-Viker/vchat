@@ -13,8 +13,8 @@
     <div class="page-bd" v-infinite-scroll="getAddContactList" infinite-scroll-disabled="loading" infinite-scroll-distance="100">
       <mt-cell :title="item.username" :label='item.pivot.content' :to="'/personalDetail?id=' + item.id" class='v-cell v-cell-2' v-for='(item, index) in addContactList' :key='item.id'>
         <img slot="icon" :src="getImgURL(item.avatar)" class='img-head'>
-        <mt-button class="btn-green" type='primary' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item.id, 1, index)'>接受</mt-button>
-        <mt-button class="btn-reject" type='danger' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item.id, 2, index)'>拒绝</mt-button>
+        <mt-button class="btn-green btn-action" type='primary' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item.id, 1, index)'>接受</mt-button>
+        <mt-button class="btn-reject btn-action" type='danger' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item.id, 2, index)'>拒绝</mt-button>
         <span class='btn-txt' v-if='item.pivot.status == 1'>已添加</span>
         <span class='btn-txt' v-if='item.pivot.status == 2'>已拒绝</span>
       </mt-cell>
@@ -65,6 +65,7 @@ export default {
 
     // 获取添加通讯录好友请求列表
     getAddContactList() {
+      if (this.loading) {return;}
       this.loading = true;
       this.$api.getAddContactList({page: this.page, pageNum: this.pageNum})
       .then(res => {
@@ -88,6 +89,9 @@ export default {
       .then(res => {
         if (res.code == '00') {
           this.$set(this.addContactList[index].pivot, 'status', status);
+
+          // 如果是同意 则需要在聊天列表新增和对方的聊天框
+
         } else {
           this.$toast(res.msg);
         }
@@ -106,7 +110,7 @@ export default {
 .new-friend-page {
   .icon-add-contact {
     position: fixed;
-    z-index: 10;
+    z-index: 101;
     top: .14rem;
     right: .1rem;
     font-size: .18rem;
@@ -129,8 +133,15 @@ export default {
 
   .page-bd {
     margin-top: .2rem;
+    .btn-action {
+      height: .27rem;
+      font-size: .12rem;
+    }
     .btn-reject {
       margin-left: .1rem;
+    }
+    .btn-txt {
+      font-size: .12rem;
     }
   }
 }

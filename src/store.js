@@ -40,6 +40,12 @@ export default new Vuex.Store({
       state.contactList = payload;
     },
 
+    delContactList(state, payload) {
+      var key = payload.key;
+      var index = payload.index;
+      state.contactList[key].splice(index, 1);
+    },
+
     setNewChatNum(state, payload) {
       state.newChatNum = payload;
     },

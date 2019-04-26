@@ -14,7 +14,7 @@
         </mt-cell>
 
         <mt-index-section :index="key" v-for='(contacts, key) in contactList' :key='key'>
-          <mt-cell :title="item.username" class='v-cell' v-for='item in contacts' :key='item.id'><img slot="icon" :src="getImgURL(item.avatar)" class='img-head'></mt-cell>
+          <mt-cell :title="item.username" class='v-cell' :to="'/personalDetail?id=' + item.id" v-for='item in contacts' :key='item.id'><img slot="icon" :src="getImgURL(item.avatar)" class='img-head'></mt-cell>
         </mt-index-section>
 
         <div class="list-tips">{{ totalContactNum }}位联系人</div>
@@ -27,7 +27,7 @@
 <script>
 import VSearch from '@/components/VSearch';
 import {mapState} from 'vuex';
-import {isChinese, getPinYinFirstCharacter} from '@/assets/js/pinyin';
+import {getPinYinFirstCharacter} from '@/assets/js/pinyin';
 
 export default {
   name: 'Contact',
@@ -106,7 +106,7 @@ export default {
 .contact-page {
   .icon-add-contact {
     position: fixed;
-    z-index: 10;
+    z-index: 101;
     top: .14rem;
     right: .1rem;
     font-size: .18rem;

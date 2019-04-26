@@ -109,4 +109,33 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 搜索用户
+  search(params) {
+    return axios.post('/user/search', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 添加好友
+  addContact(params) {
+    return axios.post('/contact/add', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 绑定client_id和用户id
+  bindUid(params) {
+    return axios.post('/chat/bindUid', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 删除好友
+  delContact(params) {
+    return axios.post('/contact/del', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+
 }

@@ -11,6 +11,7 @@
 <script>
 import VHeader from '@/components/VHeader';
 import VTabbar from '@/components/VTabbar';
+import Socket from '@/assets/js/socket';
 
 export default {
   name: 'app',
@@ -33,6 +34,12 @@ export default {
       if (window.localStorage.getItem('token')) {
         this.getNewChatNum(); // 获取最新消息数
         this.getNewAddContactNum(); //获取最新添加好友请求消息数
+
+        // WebSocket 初始化
+        Socket.onInit = this.onSocketInit;
+        Socket.onAddContact = this.onAddContact;
+        Socket.onAgreeAddContact = this.onAgreeAddContact;
+        Socket.init();
       }
       return res;
     }).then(res => {
@@ -43,6 +50,28 @@ export default {
   },
 
   methods: {
+    // 当socket登录后将client_id和当前用户ID发送给后端绑定
+    onSocketInit(data) {
+      this.$api.bindUid({clientId: data.client_id})
+      .then(res => {
+        if (res.code == '00') {
+
+        } else {
+          this.$toast(res.msg);
+        }
+      })
+    },
+
+    // 新的添加通讯录好友请求
+    onAddContact(data) {
+      this.$store.commit('setNewAddContactNum', this.$store.state.newAddContactNum + 1);
+    },
+
+    // 对方同意你的添加通讯录好友请求
+    onAgreeAddContact(data) {
+      
+    },
+
     // 初始化（进入或刷新）
     init() {
       document.title = this.$route.meta.title + ' - ' + this.$store.state.config.system_name;
