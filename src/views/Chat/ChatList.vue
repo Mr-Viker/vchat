@@ -3,9 +3,10 @@
     <v-search></v-search>
 
     <div class="page-bd">
-      <mt-cell :title="item.username" :label='item.contents[0].msg' :to="'/Chat?id=' + item.from_id" class='v-cell v-cell-2' v-for='(item, index) in chatList' :key='item.from_id'>
+      <mt-cell :title="item.username" :label='item.content' :to="'/Chat?id=' + item.uid" class='v-cell v-cell-2' v-for='(item, index) in chatList' :key='item.uid'>
         <img slot="icon" :src="getImgURL(item.avatar)" class='img-head'>
-        <span class='btn-txt'>{{ item.contents[0].time.split(' ')[1] }}</span>
+        <mt-badge type="error" size='small' class='v-cell-badge' v-if='item.new_chat_num > 0'>{{ item.new_chat_num }}</mt-badge>
+        <span class='btn-txt'>{{ item.created_at.split(' ')[1].substr(0, 5) }}</span>
       </mt-cell>
     </div>
   </section>
@@ -58,6 +59,12 @@ export default {
     .btn-txt {
       font-size: .12rem;
       color: @gray;
+    }
+    .v-cell-badge {
+      position: absolute;
+      top: .06rem;
+      left: .37rem;
+      padding: .01rem .04rem;
     }
   }
 }

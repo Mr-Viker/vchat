@@ -75,6 +75,7 @@ export default {
     position: absolute;
     top: -.35rem;
     left: 15vw;
+    padding: .01rem .04rem;
     // padding: .03rem;
   }
 }
