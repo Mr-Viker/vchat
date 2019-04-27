@@ -137,5 +137,12 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 获取聊天列表
+  getChatList(params) {
+    return axios.post('/chat/list', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
 
 }

@@ -171,7 +171,18 @@ export default new Router({
         requireAuth: true,
       }
     },
-
+    {
+      path: '/chat',
+      name: 'Chat',
+      component: Chat,
+      meta: {
+        title: '',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
+      }
+    },
 
 
     // 必须放最后
