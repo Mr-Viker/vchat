@@ -27,7 +27,6 @@
 <script>
 import VSearch from '@/components/VSearch';
 import {mapState} from 'vuex';
-import {getPinYinFirstCharacter} from '@/assets/js/pinyin';
 
 export default {
   name: 'Contact',
@@ -56,45 +55,6 @@ export default {
       this.getContactList();
     }
   },
-
-  methods: {
-    // 获取通讯录列表
-    getContactList() {
-      this.$api.getContactList()
-      .then(res => {
-        if (res.code == '00') {
-          this.$store.commit('setContactList', this.formatContact(res.data));
-          this.$store.commit('setTotalContactNum', res.data.length);
-        } else {
-          this.$toast(res.msg);
-        }
-      })
-    },
-
-    // 格式化通讯录数组
-    formatContact(data) {
-      var result = {};
-      var charArr = [];
-      var res = {};
-
-      data.forEach((item) => {
-        var key = getPinYinFirstCharacter(item.username).substr(0,1).toUpperCase();
-        if (typeof result[key] == 'undefined') {
-          result[key] = [];
-          charArr.push(key);
-        }
-        result[key].push(item);
-      });
-
-      // 排序
-      charArr.sort();
-      charArr.forEach((val) => {
-        res[val] = result[val];
-      })
-
-      return res;
-    }
-  }
 
 }
 </script>

@@ -2,6 +2,8 @@
  * 公共方法
  */
 
+import {getPinYinFirstCharacter} from '@/assets/js/pinyin';
+
 export default {
   install(Vue, opts) {
     // 判断是否是微信浏览器
@@ -50,6 +52,57 @@ export default {
       return parseFloat(Number(value).toFixed(keep));
     }
 
+
+    // 获取聊天列表
+    Vue.prototype.getChatList = function() {
+      return this.$api.getChatList()
+      .then(res => {
+        if (res.code == '00') {
+          this.$store.commit('setChatList', res.data);
+        } else {
+          this.$toast(res.msg);
+        }
+        return res;
+      })
+    }
+
+    // 获取通讯录列表
+    Vue.prototype.getContactList = function() {
+      return this.$api.getContactList()
+      .then(res => {
+        if (res.code == '00') {
+          this.$store.commit('setContactList', this.formatContact(res.data));
+          this.$store.commit('setTotalContactNum', res.data.length);
+        } else {
+          this.$toast(res.msg);
+        }
+        return res;
+      })
+    }
+
+    // 格式化通讯录数组
+    Vue.prototype.formatContact = function(data) {
+      var result = {};
+      var charArr = [];
+      var res = {};
+
+      data.forEach((item) => {
+        var key = getPinYinFirstCharacter(item.username).substr(0,1).toUpperCase();
+        if (typeof result[key] == 'undefined') {
+          result[key] = [];
+          charArr.push(key);
+        }
+        result[key].push(item);
+      });
+
+      // 排序
+      charArr.sort();
+      charArr.forEach((val) => {
+        res[val] = result[val];
+      })
+
+      return res;
+    }
 
   }
 }

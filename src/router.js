@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Api from '@/assets/js/api';
 
 import ChatList from '@/views/Chat/ChatList'
 const Chat = () => import('@/views/Chat/Chat')
@@ -181,6 +182,19 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+      },
+      beforeEnter: (to, from, next) => {
+        Api.getUserInfo({id: to.query.id})
+        .then(res => {
+          if (res.code == '00') {
+            to.meta.title = res.data.username;
+            to.query.username = res.data.username;
+            to.query.avatar = res.data.avatar;
+          }
+          next();
+        }).catch(err => {
+          next();
+        })
       }
     },
 

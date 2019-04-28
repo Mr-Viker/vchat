@@ -144,5 +144,25 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 发送消息
+  send(params) {
+    return axios.post('/chat/send', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 获取聊天记录列表
+  getChatRecord(params) {
+    return axios.post('/chat/record', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 修改未读消息为已读状态
+  readChat(params) {
+    return axios.post('/chat/read', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
 
 }

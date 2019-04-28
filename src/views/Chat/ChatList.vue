@@ -3,7 +3,7 @@
     <v-search></v-search>
 
     <div class="page-bd">
-      <mt-cell :title="item.username" :label='item.content' :to="'/Chat?id=' + item.uid" class='v-cell v-cell-2' v-for='(item, index) in chatList' :key='item.uid'>
+      <mt-cell :title="item.username" :label='item.content' :to="'/Chat?id=' + item.uid + '&num=' + item.new_chat_num" class='v-cell v-cell-2' v-for='(item, index) in chatList' :key='item.uid'>
         <img slot="icon" :src="getImgURL(item.avatar)" class='img-head'>
         <mt-badge type="error" size='small' class='v-cell-badge' v-if='item.new_chat_num > 0'>{{ item.new_chat_num }}</mt-badge>
         <span class='btn-txt'>{{ item.created_at.split(' ')[1].substr(0, 5) }}</span>
@@ -15,33 +15,23 @@
 
 <script>
 import VSearch from '@/components/VSearch';
+import {mapState} from 'vuex';
 
 export default {
   name: 'ChatList',
   components: {VSearch},
   data() {
     return {
-      chatList: [], //聊天列表
+      // chatList: [], //聊天列表
     }
   },
 
-  created() {
-    this.getChatList();
+  computed: {
+    ...mapState({
+      chatList: state => state.chatList, //聊天列表
+    })
   },
 
-  methods: {
-    // 获取聊天列表
-    getChatList() {
-      this.$api.getChatList()
-      .then(res => {
-        if (res.code == '00') {
-          this.chatList = res.data;
-        } else {
-          this.$toast(res.msg);
-        }
-      })
-    },
-  }
 }
 </script>
 

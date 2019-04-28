@@ -13,8 +13,8 @@
     <div class="page-bd" v-infinite-scroll="getAddContactList" infinite-scroll-disabled="loading" infinite-scroll-distance="100">
       <mt-cell :title="item.username" :label='item.pivot.content' :to="'/personalDetail?id=' + item.id" class='v-cell v-cell-2' v-for='(item, index) in addContactList' :key='item.id'>
         <img slot="icon" :src="getImgURL(item.avatar)" class='img-head'>
-        <mt-button class="btn-green btn-action" type='primary' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item.id, 1, index)'>接受</mt-button>
-        <mt-button class="btn-reject btn-action" type='danger' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item.id, 2, index)'>拒绝</mt-button>
+        <mt-button class="btn-green btn-action" type='primary' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item, 1, index)'>接受</mt-button>
+        <mt-button class="btn-reject btn-action" type='danger' size="small" v-if='item.pivot.status == 0' @click.native.prevent.stop='editAddContact(item, 2, index)'>拒绝</mt-button>
         <span class='btn-txt' v-if='item.pivot.status == 1'>已添加</span>
         <span class='btn-txt' v-if='item.pivot.status == 2'>已拒绝</span>
       </mt-cell>
@@ -84,14 +84,19 @@ export default {
     },
 
     // 修改状态
-    editAddContact(id, status, index) {
-      this.$api.editAddContact({id: id, status, status})
+    editAddContact(item, status, index) {
+      this.$api.editAddContact({id: item.id, status, status})
       .then(res => {
         if (res.code == '00') {
           this.$set(this.addContactList[index].pivot, 'status', status);
 
-          // 如果是同意 则需要在聊天列表新增和对方的聊天框
-
+          // 如果是同意 则需要在聊天列表新增和对方的聊天框 并重新获取通讯录列表
+          if (status == 1) {
+            this.getContactList();
+            console.log('editAddContact: ', res.data);
+            this.$store.commit('addChatList', res.data);
+            this.$router.push({name: 'Chat', query: {id: res.data.uid}});
+          }
         } else {
           this.$toast(res.msg);
         }

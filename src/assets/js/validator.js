@@ -70,10 +70,18 @@ export default {
         }
       }
 
-      // 昵称
+      // 短信验证码
       if (form.hasOwnProperty('smsCode')) {
         if (!form.smsCode) {
           this.$toast('短信验证码不能为空');
+          return false;
+        }
+      }
+
+      // 内容
+      if (form.hasOwnProperty('content')) {
+        if (!form.content) {
+          this.$toast('内容不能为空');
           return false;
         }
       }

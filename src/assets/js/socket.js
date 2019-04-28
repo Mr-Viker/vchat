@@ -24,7 +24,6 @@ export default {
   onopen() {
     var data = JSON.stringify({
       type: 'init',
-      room_id: 1,
     });
     console.log('onopen: ', data);
     this.ws.send(data);
@@ -52,6 +51,11 @@ export default {
       // 对方同意自己的添加通讯录好友请求
       case 'agreeAddContact':
         this.onAgreeAddContact && this.onAgreeAddContact(data);
+        break;
+
+      // 聊天
+      case 'chat':
+        this.onChat && this.onChat(data);
         break;
     }
   },

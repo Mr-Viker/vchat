@@ -31,16 +31,19 @@ export default {
       }
       return res;
     }).then(res => {
-      if (window.localStorage.getItem('token')) {
+      if (window.localStorage.getItem('token')) {        
+        this.getChatList(); // 获取聊天列表
         this.getNewChatNum(); // 获取最新消息数
         this.getNewAddContactNum(); //获取最新添加好友请求消息数
-
-        // WebSocket 初始化
-        Socket.onInit = this.onSocketInit;
-        Socket.onAddContact = this.onAddContact;
-        Socket.onAgreeAddContact = this.onAgreeAddContact;
-        Socket.init();
       }
+      return res;
+    }).then(res => {
+      // WebSocket 初始化
+      Socket.onInit = this.onSocketInit;
+      Socket.onAddContact = this.onAddContact;
+      Socket.onAgreeAddContact = this.onAgreeAddContact;
+      Socket.onChat = this.onChat;
+      Socket.init();
       return res;
     }).then(res => {
       this.init();
@@ -51,11 +54,10 @@ export default {
 
   methods: {
     // 当socket登录后将client_id和当前用户ID发送给后端绑定
-    onSocketInit(data) {
-      this.$api.bindUid({clientId: data.client_id})
+    onSocketInit(res) {
+      this.$api.bindUid({clientId: res.client_id})
       .then(res => {
         if (res.code == '00') {
-
         } else {
           this.$toast(res.msg);
         }
@@ -63,14 +65,24 @@ export default {
     },
 
     // 新的添加通讯录好友请求
-    onAddContact(data) {
+    onAddContact(res) {
       this.$store.commit('setNewAddContactNum', this.$store.state.newAddContactNum + 1);
     },
 
     // 对方同意你的添加通讯录好友请求
-    onAgreeAddContact(data) {
+    onAgreeAddContact(res) {
+      this.getContactList();
+      console.log('onAgreeAddContact: ', res);
+      this.$store.commit('addNewChatList', res.data);
+      // 重新获取通讯录列表
+    },
+
+    // 有人发了条消息过来
+    onChat(res) {
+      // 将消息存入聊天列表中
       
     },
+
 
     // 初始化（进入或刷新）
     init() {

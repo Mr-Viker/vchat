@@ -25,7 +25,7 @@
       <mt-cell title="个性签名" :value='info.signature' />
     </div>
 
-    <div class="page-ft">
+    <div class="page-ft" v-if='Object.keys(info).length > 0'>
       <div class="content-cell" v-if='info.is_contact' @click="$router.push({name: 'Chat', query: {id: info.id}})">发信息</div>
       <mt-button type="danger" v-if='info.is_contact' size='large' class='content-cell btn-del' @click.native='delContact'>删除好友</mt-button>
       <div class="content-cell" v-else @click="addContact">添加到通讯录</div>
@@ -51,6 +51,7 @@ export default {
   computed: {
     ...mapState({
       contactList: state => state.contactList,
+      totalContactNum: state => state.totalContactNum,
     })
   },
 
@@ -100,7 +101,11 @@ export default {
               var key = getPinYinFirstCharacter(this.info.username).substr(0,1).toUpperCase();
               for (var i = this.contactList[key].length - 1; i >= 0; i--) {
                 if (this.contactList[key][i].id == this.info.id) {
-                  this.$store.commit('delContactList', {key: key, index: i});
+                  // this.$store.commit('delContactList', {key: key, index: i});
+                  // this.$store.commit('setTotalContactNum', this.totalContactNum - 1);
+                  this.getContactList();
+                  // 删除和该好友的聊天框
+                  this.$store.commit('delChatList', {uid: this.info.id});
                   break;
                 }
               }

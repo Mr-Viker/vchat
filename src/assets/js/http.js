@@ -61,7 +61,7 @@ var instance = axios.create({
 
   // `timeout` 指定请求超时的毫秒数(0 表示无超时时间)
   // 如果请求话费了超过 `timeout` 的时间，请求将被中断
-  timeout: 10000,
+  timeout: 30000,
 
   // `withCredentials` 表示跨域请求时是否需要使用凭证
   withCredentials: false, // 默认false
