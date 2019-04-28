@@ -100,6 +100,22 @@ export default new Vuex.Store({
       });
     },
 
+    // 有消息发送过来
+    onChat(state, payload) {
+      var key;
+      state.chatList.forEach(function(item, index) {
+        if (item.uid == payload.uid) {
+          state.newChatNum = state.newChatNum + 1;
+          var num = state.chatList[index]['new_chat_num'];
+          state.chatList[index] = payload;
+          state.chatList[index]['new_chat_num'] = num + 1;
+          key = index;
+        }
+      });
+      // 把当前项放入数组第一项
+      state.chatList.unshift(state.chatList.splice(key, 1)[0]);
+    },
+
 
   },
 

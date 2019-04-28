@@ -71,16 +71,15 @@ export default {
 
     // 对方同意你的添加通讯录好友请求
     onAgreeAddContact(res) {
-      this.getContactList();
-      console.log('onAgreeAddContact: ', res);
-      this.$store.commit('addNewChatList', res.data);
       // 重新获取通讯录列表
+      this.getContactList();
+      this.$store.commit('addNewChatList', res.data);
     },
 
     // 有人发了条消息过来
     onChat(res) {
       // 将消息存入聊天列表中
-      
+      this.$store.commit('onChat', res.data);
     },
 
 

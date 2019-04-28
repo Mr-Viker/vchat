@@ -1,8 +1,8 @@
 <template>
   <section class="page chat-page page-has-tab">
     <!-- 列表区域 -->
-    <div class="page-bd" :top-method="getChatRecord" ref="loadmore">
-      <div class="chat-card" v-for='item in recordList' :key='item.id'>
+    <mt-loadmore class='page-bd' id='page-bd' :top-method="getChatRecord" ref="loadmore" top-pull-text='下拉加载' :top-distance='30'>
+      <div class="chat-card" id="chat-card" v-for='item in recordList' :key='item.id'>
         <!-- 对方发的 -->
         <div class="left-card" v-if='item.from_id == form.id'>
           <img :src="getImgURL(info.avatar)" alt="" class="img-head">
@@ -14,7 +14,7 @@
           <img :src="getImgURL(info.avatar)" alt="" class="img-head">
         </div>
       </div>
-    </div>
+    </mt-loadmore>
 
     <div class="page-ft">
       <form class="ft-form" @submit.prevent='submit' novalidate>
@@ -39,7 +39,7 @@ export default {
       },
       recordList: [], // 聊天记录列表
       page: 1,
-      pageNum: 5,
+      pageNum: 15,
       loading: false, // 加载状态
       info: {}, //对方用户信息
     }
@@ -48,7 +48,13 @@ export default {
   created() {
     if (this.$route.query.id) {
       this.form.id = this.$route.query.id;
-      this.getChatRecord();
+      this.getChatRecord()
+      .then(res => {
+        this.$nextTick(() => {
+          var bd = document.getElementById('page-bd');
+          window.scrollTo(0, bd.scrollHeight);
+        })
+      })
 
       // 如果有未读消息 则需要调用已读接口
       if (this.$route.query.num > 0) {
@@ -68,17 +74,19 @@ export default {
   methods: {
     // 获取聊天记录列表
     getChatRecord() {
-      if (this.loading) { return; }
+      if (this.loading) { 
+        this.$refs.loadmore.onTopLoaded();
+        return; 
+      }
       this.loading = true;
-      this.$api.getChatRecord({
+      return this.$api.getChatRecord({
         id: this.form.id,
         page: this.page,
         pageNum: this.pageNum,
       }).then(res => {
         if (res.code == '00') {
-          this.recordList = this.recordList.concat(res.data);
-          console.log('ref: ', this.$refs);
-          // this.$refs.loadmore.onTopLoaded(); // 对组件进行一些重新定位的操作
+          this.recordList = res.data.reverse().concat(this.recordList);
+          this.$refs.loadmore.onTopLoaded();
 
           if (this.page < res.last_page) {
             this.page++;
@@ -87,6 +95,7 @@ export default {
         } else {
           this.toast(res.msg);
         }
+        return res;
       })
     },
 
@@ -118,8 +127,14 @@ export default {
         this.$api.send(this.form)
         .then(res => {
           if (res.code == '00') {
+            this.form.content = '';
             // 新增一条记录
-            
+            this.recordList.push(res.data);
+            // 向上滚动一些距离
+            this.$nextTick(() => {
+              var card = document.getElementById('chat-card');
+              window.scrollBy(0, card.scrollHeight + 15);
+            })
           } else {
             this.$toast(res.msg);
           }
@@ -136,10 +151,11 @@ export default {
 @import '../../assets/css/_variable.less';
   
 .chat-page {
-  background: url(../../assets/img/launch.png) center/cover;
+  // background: url(../../assets/img/launch.png) center/cover;
 
   .page-bd {
-    padding: .1rem .1rem;
+    min-height: 70vh;
+    padding: .1rem .1rem 0;
 
     .chat-card {
       margin-bottom: .15rem;
@@ -197,6 +213,7 @@ export default {
     width: 100%;
     height: .5rem;
     background-color: @bgc;
+    border-top: 1px solid @disabled-bgc;
     .ft-form {
       display: flex;
       align-items: center;
@@ -212,6 +229,9 @@ export default {
       border-radius: .05rem;
       height: .3rem;
       padding: 0 .1rem;
+      &:focus {
+        outline: none;
+      }
     }
     .ft-icon {
       font-size: .28rem;
