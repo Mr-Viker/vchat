@@ -151,7 +151,8 @@ export default {
 @import '../../assets/css/_variable.less';
   
 .chat-page {
-  // background: url(../../assets/img/launch.png) center/cover;
+  background: url('../../assets/img/chat/chat-bg.jpg') no-repeat fixed;
+  background-size: contain;
 
   .page-bd {
     min-height: 70vh;
@@ -213,7 +214,7 @@ export default {
     width: 100%;
     height: .5rem;
     background-color: @bgc;
-    border-top: 1px solid @disabled-bgc;
+    // border-top: 1px solid @disabled-bgc;
     .ft-form {
       display: flex;
       align-items: center;
