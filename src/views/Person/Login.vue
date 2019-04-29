@@ -1,7 +1,12 @@
 <template>
   <section class="page login-page">
 
-    <div class="page-hd"><img class="img-logo" src="../../assets/img/person/logo.jpg"></div>
+    <div class="page-hd flex-v">
+      <div class="v-uploader">
+        <img :src="getImgURL(avatar)" alt="" v-if='avatar' class="img-response">
+        <img src="../../assets/img/person/user-default.jpeg" alt="" class="img-response" v-else>
+      </div>
+    </div>
     
     <div class="page-bd">
       <form @submit.prevent='login' novalidate>
@@ -31,6 +36,22 @@ export default {
         phone: '',
         password: '',
       },
+      avatar: '',
+    }
+  },
+
+  watch: {
+    'form.phone'(newVal, oldVal) {
+      if (newVal.length == 11) {
+        this.$api.getAvatar({phone: newVal})
+        .then(res => {
+          if (res.code == '00') {
+            if (res.data) {
+              this.avatar = res.data.avatar;
+            }
+          }
+        })
+      }
     }
   },
 
@@ -41,7 +62,7 @@ export default {
         this.$api.login(this.form)
         .then(res => {
           if (res.code === '00') {
-            this.$toast({message: '登录成功', duration: 1500});
+            this.$toast({message: '登录成功', duration: 1000});
             
             window.localStorage.setItem('token', res.data.token);
             axios.defaults.headers.token = 'bearer ' + res.data.token;
@@ -54,7 +75,8 @@ export default {
                 } else {
                   this.$router.push({name: 'Person'});
                 }
-              }, 1500);
+                window.location.reload();
+              }, 500);
             })
 
           } else {
@@ -83,10 +105,7 @@ export default {
 .login-page {
   .page-hd {
     height: 2rem;
-    .img-logo {
-      height: 100%;
-      width: 100%;
-    }
+    background: #fff url("../../assets/img/person/logo.jpg") center/cover no-repeat;
   }
 
   .page-bd {

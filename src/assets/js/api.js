@@ -165,4 +165,12 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+
+  // 根据手机号获取头像
+  getAvatar(params) {
+    return axios.post('/user/avatar', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
 }
