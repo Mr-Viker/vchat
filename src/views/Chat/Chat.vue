@@ -1,17 +1,20 @@
 <template>
   <section class="page chat-page page-has-tab">
+    <!-- 右上角添加联系人图标 -->
+    <i class="iconfont icon-wo v-header-r" @click='$router.push({name: "PersonalDetail", query: {id: $route.query.id}})'></i>
+
     <!-- 列表区域 -->
-    <mt-loadmore class='page-bd' id='page-bd' :top-method="getChatRecord" ref="loadmore" top-pull-text='下拉加载' :top-distance='30'>
-      <div class="chat-card" id="chat-card" v-for='item in recordList' :key='item.id'>
+    <mt-loadmore class='page-bd' id='page-bd' :top-method="getChatRecord" ref="loadmore" top-pull-text='下拉加载' :top-distance='30' :cancelable='false'>
+      <div :class="['chat-card', 'chat-card-' + index]" v-for='(item, index) in recordList'>
         <!-- 对方发的 -->
         <div class="left-card" v-if='item.from_id == form.id'>
-          <img :src="getImgURL(info.avatar)" alt="" class="img-head">
-          <span class="card-bd">{{item.content}}</span>
+          <router-link :to="'/personalDetail?id=' + info.id"><img :src="getImgURL(info.avatar)" alt="" class="img-head"></router-link>
+          <div class="card-bd">{{item.content}}</div>
         </div>
         <!-- 自己发的 -->
-        <div class="right-card" v-else>
-          <span class="card-bd">{{item.content}}</span>
-          <img :src="getImgURL(info.avatar)" alt="" class="img-head">
+        <div class="right-card" v-else-if='item.from_id == userInfo.id'>
+          <div class="card-bd">{{item.content}}</div>
+          <router-link :to="'/personalDetail?id=' + userInfo.id"><img :src="getImgURL(userInfo.avatar)" alt="" class="img-head"></router-link>
         </div>
       </div>
     </mt-loadmore>
@@ -19,7 +22,7 @@
     <div class="page-ft">
       <form class="ft-form" @submit.prevent='submit' novalidate>
         <i class="iconfont icon-84qiehuanyuyin ft-icon"></i>
-        <input type="text" class="ft-input" v-model='form.content'>
+        <input type="text" class="ft-input" v-model='content'>
         <i class="iconfont icon-add ft-icon"></i>
       </form>
     </div>
@@ -28,6 +31,8 @@
 
 
 <script>
+import {mapState} from 'vuex';
+
 export default {
   name: 'Chat',
   data() {
@@ -37,35 +42,59 @@ export default {
         content: '',
         type: 0,
       },
-      recordList: [], // 聊天记录列表
+      // recordList: [], // 聊天记录列表
       page: 1,
       pageNum: 15,
       loading: false, // 加载状态
       info: {}, //对方用户信息
+      content: '', //输入框内容
+    }
+  },
+
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo,
+      recordList: state => state.recordList,
+      chatList: state => state.chatList,
+    })
+  },
+
+  watch: {
+    recordList(newVal, oldVal) {
+      if (newVal.length <= 0) {return;}
+      this.$nextTick(() => {
+        // 发送或接收
+        if (newVal.length == oldVal.length) {
+          var height = document.querySelector('.chat-card-0').offsetTop;
+          window.scrollBy(0, height);
+        } else {
+          // 加载
+          var num = newVal.length - oldVal.length - 1;
+          var height = document.querySelector('.chat-card-' + num).offsetTop;
+          window.scrollBy(0, height);
+        }
+      })
     }
   },
 
   created() {
     if (this.$route.query.id) {
       this.form.id = this.$route.query.id;
+      this.info = {id: this.$route.query.id, username: this.$route.query.username, avatar: this.$route.query.avatar};
+
       this.getChatRecord()
-      .then(res => {
-        this.$nextTick(() => {
-          var bd = document.getElementById('page-bd');
-          window.scrollTo(0, bd.scrollHeight);
-        })
-      })
+      // .then(res => {
+      //   // 滚动到底部
+      //   var listH = document.getElementById('page-bd').offsetHeight;
+      //   var viewH = window.innerHeight - 96; // 96是header + footer 的高度
+      //   window.scrollTo(0, listH - viewH);
+      // })
 
       // 如果有未读消息 则需要调用已读接口
       if (this.$route.query.num > 0) {
-        this.readChat();
+        this.readChat(this.$route.query.id);
       }
 
-      // this.getInfo(this.form.id);
-      this.info = {
-        username: this.$route.query.username,
-        avatar: this.$route.query.avatar,
-      }
     } else {
       this.$router.back();
     }
@@ -79,13 +108,14 @@ export default {
         return; 
       }
       this.loading = true;
+
       return this.$api.getChatRecord({
         id: this.form.id,
         page: this.page,
         pageNum: this.pageNum,
       }).then(res => {
         if (res.code == '00') {
-          this.recordList = res.data.reverse().concat(this.recordList);
+          this.$store.commit('setRecordList', res.data.reverse().concat(this.recordList));
           this.$refs.loadmore.onTopLoaded();
 
           if (this.page < res.last_page) {
@@ -99,50 +129,47 @@ export default {
       })
     },
 
-    // 获取该用户信息
-    getInfo(id) {
-      this.$api.getUserInfo({id: id})
-      .then(res => {
-        if (res.code == '00') {
-          this.info = res.data;
-        } else {
-          this.$toast(res.msg);
-        }
-      })
-    },
-
-    // 修改未读消息为已读状态
-    readChat() {
-      this.$api.readChat({id: this.form.id})
-      .then(res => {
-        if (res.code == '00') {
-          this.$store.commit('readChatList', {uid: this.form.id});
-        }
-      })
-    },
-
     // 发送
     submit() {
+      this.form.content = this.content;
+      this.content = '';
       if (this.validate(this.form)) {
         this.$api.send(this.form)
         .then(res => {
           if (res.code == '00') {
-            this.form.content = '';
-            // 新增一条记录
-            this.recordList.push(res.data);
-            // 向上滚动一些距离
-            this.$nextTick(() => {
-              var card = document.getElementById('chat-card');
-              window.scrollBy(0, card.scrollHeight + 15);
-            })
+            console.log('submit: ', res.data);
+            // 新增一条聊天记录
+            this.$store.commit('pushRecordList', res.data);
+
+            // 更新chatList中和该用户的最后一条聊天记录
+            var newItem = {};
+            this.chatList.forEach((item) => {
+              if (item.uid == this.form.id) {
+                newItem.avatar = item.avatar;
+                newItem.content = this.form.content;
+                newItem.created_at = res.data.created_at;
+                newItem.is_accept = 0;
+                newItem.is_read = 0;
+                newItem.new_chat_num = 0;
+                newItem.type = 0;
+                newItem.uid = item.uid;
+                newItem.username = item.username;
+              }
+            });
+            this.$store.commit('addChatList', newItem);
           } else {
             this.$toast(res.msg);
           }
         })
       }
-    }
+    },
+
   },
 
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setRecordList', []);
+    next();
+  }
 }
 </script>
 
@@ -154,12 +181,20 @@ export default {
   background: url('../../assets/img/chat/chat-bg.jpg') no-repeat fixed;
   background-size: contain;
 
+  .v-header-r {
+    top: .12rem;
+  }
+
   .page-bd {
     min-height: 70vh;
     padding: .1rem .1rem 0;
 
     .chat-card {
       margin-bottom: .15rem;
+    }
+
+    .img-head {
+      min-width: .35rem;
     }
 
     .left-card {

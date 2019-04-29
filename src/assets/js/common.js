@@ -66,6 +66,17 @@ export default {
       })
     }
 
+
+    // 修改未读消息为已读状态
+    Vue.prototype.readChat = function(id) {
+      this.$api.readChat({id: id})
+      .then(res => {
+        if (res.code == '00') {
+          this.$store.commit('readChatList', {uid: id});
+        }
+      })
+    }
+
     // 获取通讯录列表
     Vue.prototype.getContactList = function() {
       return this.$api.getContactList()

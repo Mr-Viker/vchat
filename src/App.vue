@@ -79,7 +79,12 @@ export default {
     // 有人发了条消息过来
     onChat(res) {
       // 将消息存入聊天列表中
-      this.$store.commit('onChat', res.data);
+      this.$store.commit('addNewChatList', res.data);
+      // 如果是在和对方的聊天页面上 则需要在聊天记录上新增该消息
+      if (this.$route.name == 'Chat' && this.$route.query.id == res.data.uid) {
+        this.$store.commit('pushRecordList', res.data);
+        this.readChat(res.data.uid);
+      }
     },
 
 

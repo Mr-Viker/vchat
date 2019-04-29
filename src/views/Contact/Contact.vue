@@ -1,7 +1,7 @@
 <template>
   <section class="page contact-page page-has-search">
     <!-- 右上角添加联系人图标 -->
-    <i class="iconfont icon-jiahaoyou icon-add-contact" @click='$router.push({name: "AddContact"})'></i>
+    <i class="iconfont icon-jiahaoyou v-header-r" @click='$router.push({name: "AddContact"})'></i>
 
     <v-search></v-search>
 
@@ -64,14 +64,6 @@ export default {
 @import '../../assets/css/_variable.less';
   
 .contact-page {
-  .icon-add-contact {
-    position: fixed;
-    z-index: 101;
-    top: .14rem;
-    right: .1rem;
-    font-size: .18rem;
-  }
-
   .page-bd {
     touch-action: pan-y;
 

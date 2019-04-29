@@ -16,6 +16,7 @@ export default new Vuex.Store({
     newAddContactNum: 0, //最新添加好友请求消息数
     totalContactNum: 0, //通讯录好友总数
     chatList: [], //聊天列表
+    recordList: [], //聊天记录
   },
 
   mutations: {
@@ -72,13 +73,43 @@ export default new Vuex.Store({
       state.chatList = payload;
     },
 
+    // 添加一个未读消息到聊天列表
     addNewChatList(state, payload) {
-      state.chatList.unshift(payload);
+      var key = -1;
       state.newChatNum = state.newChatNum + 1;
+      state.chatList.forEach(function(item, index) {
+        if (item.uid == payload.uid) {
+          var num = state.chatList[index]['new_chat_num'];
+          state.chatList[index] = payload;
+          state.chatList[index]['new_chat_num'] = num + 1;
+          key = index;
+        }
+      });
+      // 把当前项放入数组第一项
+      if (key != -1) {
+        state.chatList.unshift(state.chatList.splice(key, 1)[0]);
+      } else {
+        state.chatList.unshift(payload);
+      }
     },
 
     addChatList(state, payload) {
-      state.chatList.unshift(payload);
+      console.log('addChatList payload: ', payload);
+      var key = -1;
+      state.chatList.forEach(function(item, index) {
+        if (item.uid == payload.uid) {
+          var num = state.chatList[index]['new_chat_num'];
+          state.chatList[index] = payload;
+          state.chatList[index]['new_chat_num'] = num;
+          key = index;
+        }
+      });
+      // 把当前项放入数组第一项
+      if (key != -1) {
+        state.chatList.unshift(state.chatList.splice(key, 1)[0]);
+      } else {
+        state.chatList.unshift(payload);
+      }
     },
 
     delChatList(state, payload) {
@@ -100,22 +131,14 @@ export default new Vuex.Store({
       });
     },
 
-    // 有消息发送过来
-    onChat(state, payload) {
-      var key;
-      state.chatList.forEach(function(item, index) {
-        if (item.uid == payload.uid) {
-          state.newChatNum = state.newChatNum + 1;
-          var num = state.chatList[index]['new_chat_num'];
-          state.chatList[index] = payload;
-          state.chatList[index]['new_chat_num'] = num + 1;
-          key = index;
-        }
-      });
-      // 把当前项放入数组第一项
-      state.chatList.unshift(state.chatList.splice(key, 1)[0]);
+    setRecordList(state, payload) {
+      state.recordList = payload;
     },
 
+    pushRecordList(state, payload, ) {
+      console.log('push: ', payload, state.recordList);
+      state.recordList.push(payload);
+    },
 
   },
 
