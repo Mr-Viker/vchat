@@ -20,7 +20,7 @@ export default {
       tabs: [
         { id: '/', title: '聊天', icon: 'icon-duihua', link: '/' },
         { id: '/contact', title: '通讯录', icon: 'icon-tongxunlu', link: '/contact' },
-        { id: '/find', title: '广场', icon: 'icon-zhinanzhen', link: '/find' },
+        { id: '/find', title: '发现', icon: 'icon-zhinanzhen', link: '/find' },
         { id: '/person', title: '我', icon: 'icon-wo', link: '/person' },
       ],
     };
@@ -59,7 +59,7 @@ export default {
   color: #929292;
   .mint-tab-item.is-selected {
     background-color: #f9f9f9;
-    color: @green;
+    color: @blue;
   }
   .mint-tab-item {
     padding: 4px 0;

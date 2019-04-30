@@ -1,12 +1,11 @@
 <template>
-  <section class="page person-page">
+  <section class="page moment-page">
     <div class="page-hd flex-v">
       <div class="hd-mask v-modal"></div>
-      <router-link to='/createMoment' class='hd-photo'><i class="iconfont icon-photography"></i></router-link>
-      <router-link to='/personal' class='hd-avatar'><img :src="getImgURL(userInfo.avatar)" alt="" class="img-avatar"></router-link>
+      <div class='hd-avatar'><img :src="getImgURL(info.avatar)" alt="" class="img-avatar"></div>
       <div class="hd-content">
-        <div class="content-title">{{userInfo.username}}</div>
-        <div class="content-sub text-e">{{userInfo.signature}}</div>
+        <div class="content-title">{{info.username}}</div>
+        <div class="content-sub text-e">{{info.signature}}</div>
       </div>
     </div>
 
@@ -25,12 +24,11 @@
 
 
 <script>
-import {mapState} from 'vuex';
-
 export default {
-  name: 'Person',
+  name: 'Moment',
   data() {
     return {
+      info: {}, //用户信息
       momentList: [], //记忆列表
       page: 1,
       pageNum: 10,
@@ -38,23 +36,36 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState({
-      userInfo: state => state.userInfo,
-    }),
-  },
-
   created() {
-    this.getMomentList();
+    var id = this.$route.query.id;
+    if (id) {
+      this.getInfo(id);
+      this.getMomentList(id);
+    } else {
+      this.$router.back();
+    }
   },
 
   methods: {
+    // 获取该用户信息
+    getInfo(id) {
+      this.$api.getUserInfo({id: id})
+      .then(res => {
+        if (res.code == '00') {
+          this.info = res.data;
+        } else {
+          this.$toast(res.msg);
+        }
+      })
+    },
+
     // 获取记忆列表
-    getMomentList() {
+    getMomentList(id) {
       if (this.loading) {return;}
       this.loading = true;
 
       this.$api.getMomentList({
+        id: id,
         page: this.page,
         pageNum: this.pageNum,
       }).then(res => {
@@ -79,7 +90,7 @@ export default {
 <style lang="less">
 @import '../../assets/css/_variable.less';
   
-.person-page {
+.moment-page {
 
   .page-hd {
     position: relative;
@@ -92,17 +103,6 @@ export default {
       border-radius: 0 0 15% 15%;
     }
 
-    .hd-photo {
-      position: absolute;
-      z-index: 10;
-      top: .1rem;
-      right: .2rem;
-      color: #f5f5f5;
-      text-decoration: none;
-      i {
-        font-size: .3rem;
-      }
-    }
     .hd-avatar {
       position: relative;
       z-index: 10;

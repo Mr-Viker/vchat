@@ -1,7 +1,9 @@
 <template>
   <section class="page register-page">
 
-    <div class="page-hd"><img class="img-logo" src="../../assets/img/person/logo.jpg"></div>
+    <div class="page-hd flex-v">
+      <v-uploader input-name='file' :multi='true' @uploaded='uploaded'></v-uploader>
+    </div>
     
     <div class="page-bd">
       <form @submit.prevent='register' novalidate>
@@ -23,14 +25,18 @@
 
 
 <script>
+import VUploader  from '@/components/VUploader';
+
 export default {
   name: 'Register',
+  components: { VUploader },
   data() {
     return {
       form: {
         phone: '',
         smsCode: '',
         password: '',
+        avatar: '',
       },
       leftTime: 0, //短信验证码倒计时
       timer: '', //计时器
@@ -38,6 +44,11 @@ export default {
   },
 
   methods: {
+    // 读取头像后
+    uploaded(res) {
+      this.form.avatar = res.data[0];
+    },
+
     // 获取短信验证码
     getSms() {
       var smsForm = {
@@ -93,10 +104,7 @@ export default {
 .register-page {
   .page-hd {
     height: 2rem;
-    .img-logo {
-      height: 100%;
-      width: 100%;
-    }
+    background: #fff url("../../assets/img/person/logo.jpg") center/cover no-repeat;
   }
 
   .page-bd {

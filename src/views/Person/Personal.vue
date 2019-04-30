@@ -143,16 +143,15 @@ export default {
     logout() {
       this.$api.logout()
       .then(res => {
-        this.$toast({message: '登出成功', duration: 1500});
-        this.$store.commit('setHasLogin', false);
-        this.$store.commit('setUserInfo', {});
-
+        this.$toast({message: '登出成功', duration: 1000});
         window.localStorage.removeItem('token');
         delete axios.defaults.headers.token;
 
         setTimeout(() => {
+          this.$store.commit('setHasLogin', false);
+          this.$store.commit('setUserInfo', {});
           this.$router.push({name: 'Login'});
-        }, 1500);
+        }, 500);
       })
     },
 
@@ -206,7 +205,7 @@ export default {
   }
 
   .btn-submit-container {
-    padding: 0 .2rem;
+    padding: 0 .2rem .3rem;
     .btn-primary {
     }
   }

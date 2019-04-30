@@ -13,6 +13,9 @@ const PersonalDetail = () => import('@/views/Contact/PersonalDetail')
 
 
 import Find from '@/views/Find/Find'
+const Moment = () => import('@/views/Find/Moment')
+const CreateMoment = () => import('@/views/Find/CreateMoment')
+const MomentDetail = () => import('@/views/Find/MomentDetail')
 
 
 import Person from '@/views/Person/Person'
@@ -195,6 +198,42 @@ export default new Router({
         }).catch(err => {
           next();
         })
+      }
+    },
+    {
+      path: '/createMoment',
+      name: 'CreateMoment',
+      component: CreateMoment,
+      meta: {
+        title: '记录中',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/moment',
+      name: 'Moment',
+      component: Moment,
+      meta: {
+        title: '记忆',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/momentDetail',
+      name: 'MomentDetail',
+      component: MomentDetail,
+      meta: {
+        title: '详情',
+        showHd: true,
+        showTab: false,
+        showBack: true,
+        requireAuth: true,
       }
     },
 

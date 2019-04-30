@@ -1,7 +1,7 @@
 <template>
   <section class="page find-page page-has-hd">
     <mt-navbar v-model="selected" fixed class='hd-navbar'>
-      <mt-tab-item id="1">大厅</mt-tab-item>
+      <mt-tab-item id="1">广场</mt-tab-item>
       <mt-tab-item id="2">好友</mt-tab-item>
     </mt-navbar>
 
@@ -45,8 +45,8 @@ export default {
       padding: .14rem 0;
 
       &.is-selected {
-        color: @green;
-        border-bottom: 2px solid @green;
+        color: @blue;
+        border-bottom: 2px solid @blue;
         margin-bottom: -2px;
       }
     }

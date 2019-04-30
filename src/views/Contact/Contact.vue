@@ -35,9 +35,9 @@ export default {
     return {
       hds: [
         {title: '新的朋友', img: require('../../assets/img/contact/contact_top-friend-notify.png'), url: '/newFriend'},
-        {title: '群聊', img: require('../../assets/img/contact/contact_top-addgroup.png'), url: '/group'},
-        {title: '标签', img: require('../../assets/img/contact/contact_top-tag.png'), url: '/tag'},
-        {title: '公众号', img: require('../../assets/img/contact/contact_top-offical.png'), url: '/office'},
+        // {title: '群聊', img: require('../../assets/img/contact/contact_top-addgroup.png'), url: '/group'},
+        // {title: '标签', img: require('../../assets/img/contact/contact_top-tag.png'), url: '/tag'},
+        // {title: '公众号', img: require('../../assets/img/contact/contact_top-offical.png'), url: '/office'},
       ],
     }
   },

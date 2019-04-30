@@ -12,17 +12,18 @@
     </div>
 
     <div class="page-bd">
-      <div class="bd-cell">
-        <div class="cell-hd">朋友圈</div>
+      <!-- <div class="bd-cell">
+        <div class="cell-hd">记忆</div>
         <div class="cell-bd text-e">
           <img src="../../assets/img/contact/contact_add-friend-contacts.png" alt="" class='img-moment'>
           <img src="../../assets/img/person/logo.jpg" alt="" class='img-moment'>
           <img src="../../assets/img/launch.png" alt="" class='img-moment'>
         </div>
         <div class="cell-ft"><i class="mint-cell-allow-right"></i></div>
-      </div>
+      </div> -->
 
-      <mt-cell title="个性签名" :value='info.signature' />
+      <mt-cell title="个性签名" :value='info.signature' class='v-cell' />
+      <mt-cell title="记忆" value='查看' :to="'/moment?id=' + info.id" is-link/>
     </div>
 
     <div class="page-ft" v-if='Object.keys(info).length > 0'>

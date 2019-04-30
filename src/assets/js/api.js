@@ -165,4 +165,26 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 根据手机号获取头像
+  getAvatar(params) {
+    return axios.post('/user/avatar', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 获取记忆列表
+  getMomentList(params) {
+    return axios.post('/moment/list', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 新增记忆
+  createMoment(params) {
+    return axios.post('/moment/add', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+
 }
