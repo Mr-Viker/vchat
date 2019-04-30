@@ -20,7 +20,7 @@
         left: 0;
         top: 0;
         transition: all 1s linear;
-        background: url(/launch.png) no-repeat center center;
+        background: url('/launch.jpg') no-repeat center center;
         background-size: cover;
         opacity: 1;
       }
@@ -37,20 +37,23 @@
     </noscript>
 
     <!--mask layer--> 
-    <!-- <div class="welcome" id="welcome"></div>
+    <div class="welcome" id="welcome"></div>
     <script>
       (function() {
         'use strict';
 
         var welcome = document.getElementById('welcome');
+        var index = Math.ceil(Math.random() * 5);
+        welcome.style.background = "url(/launch-" + index + ".jpg) no-repeat center/cover";
+
         setTimeout(function() {
           welcome.classList.add('away');
-        }, 2000);
+        }, 1000);
         setTimeout(function() {
           welcome.parentNode.removeChild(welcome);
-        }, 3000);
+        }, 2000);
       })();
-    </script> -->
+    </script>
 
     <div id="app"></div>
     <!-- built files will be auto injected -->

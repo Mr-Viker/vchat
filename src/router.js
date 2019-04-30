@@ -57,8 +57,8 @@ export default new Router({
       name: 'Find',
       component: Find,
       meta: {
-        title: '发现',
-        showHd: true,
+        title: '广场',
+        showHd: false,
         showTab: true,
         showBack: false,
         requireAuth: true,

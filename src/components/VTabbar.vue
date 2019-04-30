@@ -1,8 +1,8 @@
 <template>
   <mt-tabbar v-model="selected" class='v-tabbar'>
     <mt-tab-item :id="item.id" v-for='item in tabs' :key='item.id' @click.native='goto(item.link)'>
-      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "聊天" && newChatNum > 0'>{{newChatNum}}</mt-badge>
-      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.title == "通讯录" && newAddContactNum > 0'>{{newAddContactNum}}</mt-badge>
+      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.id == "/" && newChatNum > 0'>{{newChatNum}}</mt-badge>
+      <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.id == "/contact" && newAddContactNum > 0'>{{newAddContactNum}}</mt-badge>
       <i :class="['iconfont', item.icon]" slot='icon'></i>
       {{item.title}}
     </mt-tab-item>
@@ -20,7 +20,7 @@ export default {
       tabs: [
         { id: '/', title: '聊天', icon: 'icon-duihua', link: '/' },
         { id: '/contact', title: '通讯录', icon: 'icon-tongxunlu', link: '/contact' },
-        { id: '/find', title: '发现', icon: 'icon-zhinanzhen', link: '/find' },
+        { id: '/find', title: '广场', icon: 'icon-zhinanzhen', link: '/find' },
         { id: '/person', title: '我', icon: 'icon-wo', link: '/person' },
       ],
     };

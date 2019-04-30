@@ -1,10 +1,9 @@
 <template>
   <section class="page person-page">
-    <div class="page-hd">
+<!--     <div class="page-hd">
       <mt-cell :title="userInfo.username" :label="'微信号：' + userInfo.vchat_id" to="/personal" is-link class='hd-cell'>
         <img slot="icon" :src="getImgURL(userInfo.avatar)" class='img-avatar' v-if='userInfo.avatar'>
         <img slot="icon" src="../../assets/img/person/user-default.jpeg" alt="" class="img-avatar" v-else>
-        <!-- <span><img src="../../assets/img/person/qrcode.png" class="img-qrcode" alt=""></span> -->
       </mt-cell>
     </div>
 
@@ -12,6 +11,10 @@
       <mt-cell :title="item.title" v-for='item in bds' :key='item.id' :to='item.url' is-link :class="['v-cell', {'setting-cell': item.id == 'setting'}]">
         <img slot="icon" :src="item.img" width="24" height="24">
       </mt-cell>
+    </div> -->
+
+    <div class="page-hd">
+      
     </div>
 
   </section>

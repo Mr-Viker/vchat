@@ -16,6 +16,8 @@
           <div class="card-bd">{{item.content}}</div>
           <router-link :to="'/personalDetail?id=' + userInfo.id"><img :src="getImgURL(userInfo.avatar)" alt="" class="img-head"></router-link>
         </div>
+
+        <div :class="['card-time', item.from_id == userInfo.id ? 'card-time-r' : 'card-time-l']">{{item.created_at.substring(5, 16)}}</div>
       </div>
     </mt-loadmore>
 
@@ -178,7 +180,7 @@ export default {
 @import '../../assets/css/_variable.less';
   
 .chat-page {
-  background: url('../../assets/img/chat/chat-bg.jpg') no-repeat fixed;
+  // background: url('../../assets/img/chat/chat-bg.jpg') no-repeat fixed;
   background-size: contain;
 
   .v-header-r {
@@ -191,6 +193,19 @@ export default {
 
     .chat-card {
       margin-bottom: .15rem;
+      .card-time {
+        color: @gray;
+        font-size: .12rem;
+        padding-top: .03rem;
+        &.card-time-l {
+          text-align: left;
+          padding-left: .55rem;
+        }
+        &.card-time-r {
+          text-align: right;
+          padding-right: .55rem;
+        }
+      }
     }
 
     .img-head {
