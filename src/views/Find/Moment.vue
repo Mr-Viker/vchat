@@ -13,7 +13,8 @@
       <router-link class="moment-card" v-for='item in momentList' :key='item.id' :to="'/momentDetail?id=' + item.id" >
         <div class="card-hd">{{item.content}}</div>
         <div class="card-bd">
-          <img :src="getImgURL(img)" alt="" v-for='img in item.imgs' class='img-thumb'>
+          <!-- <img :src="getImgURL(img)" alt="" v-for='img in item.imgs' class='img-thumb'> -->
+          <span class="img-container" v-for='img in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}"></span>
         </div>
         <div class="card-ft">{{item.created_at}}</div>
       </router-link>
@@ -140,7 +141,7 @@ export default {
       border-radius: .05rem;
       margin-bottom: .15rem;
       .card-hd {
-        font-size: .15rem;
+        font-size: .14rem;
       }
       .card-bd {
         margin-top: .2rem;
@@ -148,6 +149,13 @@ export default {
           display: inline-block;
           width: 30vw;
           height: auto;
+          margin-right: .1rem;
+          margin-bottom: .1rem;
+        }
+        .img-container {
+          display: inline-block;
+          width: 30vw;
+          height: 30vw;
           margin-right: .1rem;
           margin-bottom: .1rem;
         }

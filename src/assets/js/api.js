@@ -186,5 +186,39 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 获取记忆详情
+  getMomentDetail(params) {
+    return axios.post('/moment/info', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 获取评论列表
+  getCommentList(params) {
+    return axios.post('/comment/list', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 点赞
+  like(params) {
+    return axios.post('/like/add', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 取消点赞
+  unlike(params) {
+    return axios.post('/like/del', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 新增评论
+  addComment(params) {
+    return axios.post('/comment/add', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
 
 }

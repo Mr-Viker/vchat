@@ -1,7 +1,7 @@
 <template>
   <section class="page add-contact-page">
     <div class="page-hd">
-      <mt-search v-model="keyword" placeholder="微信号/手机号" class='hd-search'>
+      <mt-search v-model="keyword" placeholder="VChat号/手机号" class='hd-search'>
         <div class="search-list" v-infinite-scroll="search" infinite-scroll-disabled="loading" infinite-scroll-distance="100" infinite-scroll-immediate-check='false'>
           <mt-cell :title="item.username" :label='item.signature' :to="'/personalDetail?id=' + item.id" is-link class='v-cell v-cell-2' v-for='item in list' :key='item.id'>
             <img slot="icon" :src="getImgURL(item.avatar)" class='img-head'>
@@ -10,7 +10,7 @@
         <div class="hd-tips" v-if='showNoResult'>暂无数据</div>
       </mt-search>
 
-      <div class="hd-tips">我的微信号: {{userInfo.vchat_id}}</div>
+      <div class="hd-tips">我的VChat号: {{userInfo.vchat_id}}</div>
     </div>
 
     <div class="page-bd">
@@ -31,13 +31,13 @@ export default {
   name: 'AddContact',
   data() {
     return {
-      bds: [
-        {id: 1, title: '雷达加好友', label: '添加身边的朋友', img: require('../../assets/img/contact/contact_add-friend-reda.png')},
-        {id: 2, title: '面对面建群', label: '与身边的朋友进入同一个群聊', img: require('../../assets/img/contact/contact_top-addgroup.png')},
-        {id: 3, title: '扫一扫', label: '扫描二维码名片', img: require('../../assets/img/contact/contact_add-friend-scanqr.png')},
-        {id: 4, title: '手机联系人', label: '添加通讯录中的朋友', img: require('../../assets/img/contact/contact_add-friend-contacts.png')},
-        {id: 5, title: '公众号', label: '获得更多资讯和服务', img: require('../../assets/img/contact/contact_top-offical.png')},
-      ],
+      // bds: [
+      //   {id: 1, title: '雷达加好友', label: '添加身边的朋友', img: require('../../assets/img/contact/contact_add-friend-reda.png')},
+      //   {id: 2, title: '面对面建群', label: '与身边的朋友进入同一个群聊', img: require('../../assets/img/contact/contact_top-addgroup.png')},
+      //   {id: 3, title: '扫一扫', label: '扫描二维码名片', img: require('../../assets/img/contact/contact_add-friend-scanqr.png')},
+      //   {id: 4, title: '手机联系人', label: '添加通讯录中的朋友', img: require('../../assets/img/contact/contact_add-friend-contacts.png')},
+      //   {id: 5, title: '公众号', label: '获得更多资讯和服务', img: require('../../assets/img/contact/contact_top-offical.png')},
+      // ],
       keyword: '', //搜索关键字
       list: [], //搜索结果
       page: 1,
