@@ -1,6 +1,6 @@
 <template>
   <section class="page chat-list-page">
-    <v-search></v-search>
+    <!-- <v-search></v-search> -->
 
     <div class="page-bd">
       <mt-cell-swipe :title="item.username" :label='item.content' :to="'/Chat?id=' + item.uid + '&num=' + item.new_chat_num" class='v-cell v-cell-2' v-for='(item, index) in chatList' :key='item.uid' :right="[{content: '删 除', style: { background: '#f44336', color: '#fff' }, handler: () => delChatList(item)}]" :left="[{content: '置 顶', style: { background: '#bbb', color: '#fff' }, handler: () => $messagebox.confirm('确定置顶')}]">

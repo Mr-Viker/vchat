@@ -189,22 +189,6 @@ export default {
 @import '../../assets/css/_variable.less';
   
 .moment-detail-page {
-  .user-cell {
-    display: flex;
-    .cell-r {
-      flex: 1;
-      margin-left: .15rem;
-    }
-    .cell-r-t {
-      margin: .05rem 0;
-      font-size: .14rem;
-    }
-    .cell-r-b {
-      color: @gray;
-      font-size: .12rem;
-    }
-  }
-
   .page-hd {
     background-color: #fff;
     padding: .1rem .15rem;

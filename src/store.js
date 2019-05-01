@@ -17,6 +17,8 @@ export default new Vuex.Store({
     totalContactNum: 0, //通讯录好友总数
     chatList: [], //聊天列表
     recordList: [], //聊天记录
+    // scrollTop1: 0, //记录广场tab上次停留的位置
+    // scrollTop2: 0, //记录好友tab上次停留的位置
   },
 
   mutations: {
@@ -139,6 +141,15 @@ export default new Vuex.Store({
       console.log('push: ', payload, state.recordList);
       state.recordList.push(payload);
     },
+
+    // setScrollTop1(state, payload) {
+    //   state.scrollTop1 = payload;
+    // },
+
+    // setScrollTop2(state, payload) {
+    //   state.scrollTop2 = payload;
+    // },
+
 
   },
 

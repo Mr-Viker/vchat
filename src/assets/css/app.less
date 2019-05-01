@@ -14,6 +14,11 @@ body {
   color: #333;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 #app {
   position: relative;
   height: 100vh;
@@ -95,6 +100,24 @@ body {
   white-space: nowrap;
 }
 
+.user-cell {
+  display: flex;
+}
+.user-cell .cell-r {
+  flex: 1;
+  margin-left: .15rem;
+}
+.user-cell .cell-r-t {
+  margin: .05rem 0;
+  font-size: .14rem;
+}
+.user-cell .cell-r-b {
+  color: #999;
+  font-size: .12rem;
+}
+
+
+
 .picker-toolbar {
   border-bottom: 1px solid #ececec;
 }
@@ -128,6 +151,13 @@ body {
   height: .4rem;
   border-radius: .05rem;
   border: 1px solid #ececec;
+}
+.img-container {
+  display: inline-block;
+  width: 30vw;
+  height: 30vw;
+  margin-right: .1rem;
+  margin-bottom: .1rem;
 }
 
 

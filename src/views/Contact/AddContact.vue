@@ -13,11 +13,11 @@
       <div class="hd-tips">我的VChat号: {{userInfo.vchat_id}}</div>
     </div>
 
-    <div class="page-bd">
+    <!-- <div class="page-bd">
       <mt-cell :title="item.title" :label='item.label' is-link class='v-cell v-cell-2' v-for='item in bds' :key='item.id'>
         <img slot="icon" :src="item.img" class='img-head'>
       </mt-cell>
-    </div>
+    </div> -->
     
   </section>
 </template>

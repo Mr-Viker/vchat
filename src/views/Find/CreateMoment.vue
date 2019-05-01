@@ -7,7 +7,7 @@
     </div>
 
     <div class="page-bd">
-      <v-uploader input-name='file' @uploaded='uploaded' v-for='i in (form.imgs.length + 1)' v-if='i < 5'></v-uploader>
+      <v-uploader input-name='file' @uploaded='uploaded' :show-del='true' @del='del(i)' v-for='i in (form.imgs.length + 1)' v-if='i < 5'></v-uploader>
       <!-- <v-uploader input-name='file' @uploaded='uploaded'></v-uploader> -->
       <!-- <v-uploader input-name='file' @uploaded='uploaded'></v-uploader> -->
       <!-- <v-uploader input-name='file' @uploaded='uploaded'></v-uploader> -->
@@ -49,6 +49,13 @@ export default {
     // 读取头像后
     uploaded(res) {
       this.form.imgs.push(res.data[0]);
+    },
+
+    // 删除上传的图片
+    del(i) {
+      console.log('i: ', i);
+      this.form.imgs.splice(i - 1, 1);
+      console.log('imgs: ', this.form.imgs);
     },
   }
 

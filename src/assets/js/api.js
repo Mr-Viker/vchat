@@ -221,4 +221,18 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 获取广场记忆列表
+  getPlazaMomentList(params) {
+    return axios.post('/moment/plaza', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+  // 获取好友记忆列表
+  getFriendMomentList(params) {
+    return axios.post('/moment/friend', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
 }
