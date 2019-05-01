@@ -96,7 +96,6 @@ export default new Vuex.Store({
     },
 
     addChatList(state, payload) {
-      console.log('addChatList payload: ', payload);
       var key = -1;
       state.chatList.forEach(function(item, index) {
         if (item.uid == payload.uid) {
@@ -138,7 +137,6 @@ export default new Vuex.Store({
     },
 
     pushRecordList(state, payload, ) {
-      console.log('push: ', payload, state.recordList);
       state.recordList.push(payload);
     },
 

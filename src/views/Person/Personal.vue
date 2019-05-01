@@ -2,7 +2,7 @@
   <section class="page personal-page">
 
     <div class="page-hd">
-      <vue-core-image-upload :url='options.url' text='' :inputOfFile='options.inputName' compress='50' :isXhr='true' :credentials='false' :headers='options.headers' @imageuploading="uploading" @imageuploaded="uploaded" @errorhandle="errorhandle" inputAccept='image/*' class='upload-container'>
+      <vue-core-image-upload :url='options.url' text='' :inputOfFile='options.inputName' compress='70' :isXhr='true' :credentials='false' :headers='options.headers' @imageuploading="uploading" @imageuploaded="uploaded" @errorhandle="errorhandle" inputAccept='image/*' class='upload-container' crop="local" crop-ratio='1:1'>
         <mt-cell title="头像" class='hd-cell' is-link>
           <img :src="getImgURL(userInfo.avatar)" alt="" class="img-avatar" v-if='userInfo.avatar'>
           <img src="../../assets/img/person/user-default.jpeg" alt="" class="img-avatar" v-else>

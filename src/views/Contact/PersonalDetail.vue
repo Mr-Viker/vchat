@@ -22,7 +22,7 @@
         <div class="cell-ft"><i class="mint-cell-allow-right"></i></div>
       </div> -->
 
-      <mt-cell title="个性签名" :value='info.signature' class='v-cell' />
+      <mt-cell title="个性签名" :value='info.signature' class='bd-cell-1' />
       <mt-cell title="记忆" value='查看' :to="'/moment?id=' + info.id" is-link/>
     </div>
 
@@ -167,6 +167,9 @@ export default {
       height: .6rem;
       align-items: center;
       padding: .1rem .15rem;
+    }
+    .bd-cell-1 {
+      border-bottom: 1px solid @border-c;
     }
     .cell-bd {
       flex: 1;

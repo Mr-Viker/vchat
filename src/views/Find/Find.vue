@@ -10,7 +10,7 @@
       <mt-tab-container-item id="1" v-infinite-scroll="getPlazaMomentList" infinite-scroll-disabled="loading1" infinite-scroll-distance="100" :infinite-scroll-immediate-check='false' ref='tab1'>
         <router-link :to="'momentDetail?id=' + item.id" class="find-card" v-for='item in plazaMomentList'>
           <div class="card-hd user-cell">
-            <div class="cell-l"><img :src="getImgURL(item.user.avatar)" alt="" class="img-face"></div>
+            <router-link :to="'/personalDetail?id=' + item.uid" class="cell-l"><img :src="getImgURL(item.user.avatar)" alt="" class="img-face"></router-link>
             <div class="cell-r">
               <div class="cell-r-t">{{ item.user.username }}</div>
               <div class="cell-r-b">{{ item.created_at.substr(5) }}</div>
@@ -26,7 +26,7 @@
       <mt-tab-container-item id="2" v-infinite-scroll="getFriendMomentList" infinite-scroll-disabled="loading2" infinite-scroll-distance="100" :infinite-scroll-immediate-check='false' ref='tab2'>
         <router-link :to="'momentDetail?id=' + item.id" class="find-card" v-for='item in friendMomentList'>
           <div class="card-hd user-cell">
-            <div class="cell-l"><img :src="getImgURL(item.user.avatar)" alt="" class="img-face"></div>
+            <router-link :to="'/personalDetail?id=' + item.uid" class="cell-l"><img :src="getImgURL(item.user.avatar)" alt="" class="img-face"></router-link>
             <div class="cell-r">
               <div class="cell-r-t">{{ item.user.username }}</div>
               <div class="cell-r-b">{{ item.created_at.substr(5) }}</div>

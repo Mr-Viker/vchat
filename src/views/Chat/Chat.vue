@@ -67,7 +67,8 @@ export default {
       this.$nextTick(() => {
         // 发送或接收
         if (newVal.length == oldVal.length) {
-          var height = document.querySelector('.chat-card-0').offsetTop;
+          var cards = document.querySelectorAll('.chat-card');
+          var height = cards[cards.length - 1].offsetHeight;
           window.scrollBy(0, height);
         } else {
           // 加载
@@ -75,7 +76,7 @@ export default {
           var height = document.querySelector('.chat-card-' + num).offsetTop;
           window.scrollBy(0, height);
         }
-      })
+      });
     }
   },
 
@@ -139,7 +140,6 @@ export default {
         this.$api.send(this.form)
         .then(res => {
           if (res.code == '00') {
-            console.log('submit: ', res.data);
             // 新增一条聊天记录
             this.$store.commit('pushRecordList', res.data);
 

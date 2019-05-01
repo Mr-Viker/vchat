@@ -2,7 +2,7 @@
   <section class="page moment-detail-page">
     <div class="page-hd">
       <div class="hd-t user-cell" v-if='detail.user'>
-        <div class="cell-l"><img :src="getImgURL(detail.user.avatar)" alt="" class="img-face"></div>
+        <router-link :to="'/personalDetail?id=' + detail.uid" class="cell-l"><img :src="getImgURL(detail.user.avatar)" alt="" class="img-face"></router-link>
         <div class="cell-r">
           <div class="cell-r-t">{{ detail.user.username }}</div>
           <div class="cell-r-b">{{ detail.created_at }}</div>
@@ -33,9 +33,11 @@
     <div class="page-bd" v-infinite-scroll="getCommentList" infinite-scroll-disabled="loading" infinite-scroll-distance="100">
       <div class="comment-card" v-for='item in commentList' @click='comment(item.from_uid)'>
         <div class="card-hd user-cell">
-          <div class="cell-l"><img :src="getImgURL(item.from_user.avatar)" alt="" class="img-face"></div>
+          <router-link :to="'/personalDetail?id=' + item.from_uid" class="cell-l"><img :src="getImgURL(item.from_user.avatar)" alt="" class="img-face"></router-link>
           <div class="cell-r">
-            <div class="cell-r-t">{{ item.from_user.username }} <span v-if='item.to_uid'><span class='cell-r-b'>回复</span> {{ item.to_user.username }}</span></div>
+            <div class="cell-r-t">
+              <router-link :to="'/personalDetail?id=' + item.from_uid">{{ item.from_user.username }}</router-link>&nbsp;<span v-if='item.to_uid'><span class='cell-r-b'>回复</span>&nbsp;<router-link  :to="'/personalDetail?id=' + item.to_uid">{{ item.to_user.username }}</router-link></span>
+            </div>
             <div class="cell-r-b">{{ item.created_at.substring(5, 16) }}</div>
           </div>
         </div>

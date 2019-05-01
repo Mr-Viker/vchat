@@ -1,5 +1,5 @@
 <template>
-  <vue-core-image-upload :url='options.url' text='' :inputOfFile='options.inputName' :compress='50' :isXhr='true' :credentials='false' :headers='options.headers' @imageuploading="uploading" @imageuploaded="uploaded" @errorhandle="errorhandle" inputAccept='image/*' class='v-uploader flex-v' :multiple="options.multiple" :multiple-size="4">
+  <vue-core-image-upload :url='options.url' text='' :inputOfFile='options.inputName' compress='70' :isXhr='true' :credentials='false' :headers='options.headers' @imageuploading="uploading" @imageuploaded="uploaded" @errorhandle="errorhandle" inputAccept='image/*' class='v-uploader flex-v' :multiple="options.multiple" :multiple-size="4" :crop="crop" :crop-ratio='cropRatio'>
     <i class="iconfont icon-photography icon" v-if='!imgs'></i>
     <img :src="getImgURL(item)" alt="" class="img-response" v-for='item in imgs' :key='item'>
     <i class="mintui mintui-field-error icon-del" v-if='showDel && imgs' @click='del'></i>
@@ -13,7 +13,7 @@ import VueCoreImageUpload  from 'vue-core-image-upload';
 export default {
   name: 'VUploader',
   components: {VueCoreImageUpload},
-  props: [ 'inputName', 'multi', 'showDel' ],
+  props: [ 'inputName', 'multi', 'showDel', 'crop', 'cropRatio'],
   data() {
     return {
       // 上传图片配置
