@@ -1,7 +1,7 @@
 <template>
   <section class="page add-contact-page">
     <div class="page-hd">
-      <mt-search v-model="keyword" placeholder="VChat号/手机号" class='hd-search'>
+      <mt-search v-model="keyword" placeholder="VChat/手机号" class='hd-search'>
         <div class="search-list" v-infinite-scroll="search" infinite-scroll-disabled="loading" infinite-scroll-distance="100" infinite-scroll-immediate-check='false'>
           <mt-cell :title="item.username" :label='item.signature' :to="'/personalDetail?id=' + item.id" is-link class='v-cell' v-for='item in list' :key='item.id'>
             <img slot="icon" :src="getImgURL(item.avatar)" class='img-head'>

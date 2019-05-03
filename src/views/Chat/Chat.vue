@@ -10,7 +10,13 @@
         <div class="left-card" v-if='item.from_id == form.id'>
           <router-link :to="'/personalDetail?id=' + info.id"><img :src="getImgURL(info.avatar)" alt="" class="img-head"></router-link>
           <!-- 图片 -->
-          <div class="card-bd card-bd-pic" v-if='item.content_type == 1'><img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'></div>
+          <div class="card-bd card-bd-pic" v-if='item.content_type == 1'>
+            <img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'>
+          </div>
+          <!-- 语音 -->
+          <div class="card-bd card-bd-audio" v-else-if='item.content_type == 2' @click='play(item.content)'>
+            <i class="iconfont icon-yuyinzuo"></i> {{ item.duration }}s
+          </div>
           <!-- 文字 -->
           <div class="card-bd" v-else>{{item.content}}</div>
         </div>
@@ -18,7 +24,13 @@
         <!-- 自己发的 -->
         <div class="right-card" v-else-if='item.from_id == userInfo.id'>
           <!-- 图片 -->
-          <div class="card-bd card-bd-pic" v-if='item.content_type == 1'><img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'></div>
+          <div class="card-bd card-bd-pic" v-if='item.content_type == 1'>
+            <img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'>
+          </div>
+          <!-- 语音 -->
+          <div class="card-bd card-bd-audio" v-else-if='item.content_type == 2' @click='play(item.content)'>
+            {{ item.duration }}s <i class="iconfont icon-yuyinyou"></i>
+          </div>
           <!-- 文字 -->
           <div class="card-bd" v-else>{{item.content}}</div>
           <router-link :to="'/personalDetail?id=' + userInfo.id"><img :src="getImgURL(userInfo.avatar)" alt="" class="img-head"></router-link>
@@ -37,10 +49,13 @@
       <!-- 附加功能 -->
       <div class="ft-b">
         <v-uploader input-name='file' @uploaded='uploaded' icon='icon-tupian' class='ft-uploader'></v-uploader>
+        <v-audio @success='sendAudio'></v-audio>
         <!-- <i class="iconfont icon-84qiehuanyuyin ft-b-icon"></i> -->
       </div>
     </div>
 
+    <!-- 语音播放器 -->
+    <audio ref='player' class='player'></audio>
     <img-picker :visible='visible' :imgs='imgs' @cancel='cancel'></img-picker>
   </section>
 </template>
@@ -50,16 +65,17 @@
 import {mapState} from 'vuex';
 import VUploader  from '@/components/VUploader';
 import ImgPicker from '@/components/ImgPicker';
+import VAudio from '@/components/VAudio';
 
 export default {
   name: 'Chat',
-  components: { VUploader, ImgPicker },
+  components: { VUploader, ImgPicker, VAudio },
   data() {
     return {
       form: {
         id: '',
         content: '',
-        content_type: 0, //内容类型 0文字 1图片
+        content_type: 0, //内容类型 0文字 1图片 2语音
         type: 0, // 对话类型 0用户-用户
       },
       // recordList: [], // 聊天记录列表
@@ -83,6 +99,7 @@ export default {
   },
 
   watch: {
+    // 监视历史列表 进行相应的滚动操作
     recordList(newVal, oldVal) {
       if (newVal.length <= 0) {return;}
       this.$nextTick(() => {
@@ -112,13 +129,27 @@ export default {
       if (this.$route.query.num > 0) {
         this.readChat(this.$route.query.id);
       }
-
     } else {
       this.$router.back();
     }
   },
 
+
   methods: {
+    // 点击语音播放相应的音频
+    play(url) {
+      this.$refs.player.src = this.getImgURL(url);
+      this.$refs.player.play();
+    },
+
+    // 上传语音文件后的回调
+    sendAudio(data) {
+      this.form.content = data.url;
+      this.form.content_type = 2;
+      this.form.duration = data.duration;
+      this.submit();
+    },
+
     // 关闭弹框
     cancel() {
       this.visible = false;
@@ -199,6 +230,8 @@ export default {
           } else {
             this.$toast(res.msg);
           }
+        }).catch(err => {
+          this.$toast({message: '连接IM超时, 已缓存至数据库，稍后请刷新消息记录以确认是否发送成功', duration: 5000});
         })
       }
     },
@@ -208,6 +241,7 @@ export default {
       this.content = '';
       this.form.content = '';
       this.form.content_type = 0;
+      this.form.duration ? this.form.duration = 0 : '';
     }
 
   },
@@ -267,6 +301,12 @@ export default {
     .card-bd-pic {
       padding: 0 !important;
     }
+    .card-bd-audio {
+      padding: .08rem .2rem !important;
+      .iconfont {
+        vertical-align: text-bottom;
+      }
+    }
 
     .left-card {
       display: flex;
@@ -278,6 +318,7 @@ export default {
         border-radius: .05rem;
         margin-left: .1rem;
         word-break: break-all;
+        align-self: flex-start;
         &::before {
           display: inline-block;
           content: '';
@@ -301,6 +342,7 @@ export default {
         border-radius: .05rem;
         margin-right: .1rem;
         word-break: break-all;
+        align-self: flex-start;
         &::before {
           display: inline-block;
           content: '';

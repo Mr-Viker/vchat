@@ -242,5 +242,11 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 上传文件(音频)
+  upload(params) {
+    return axios.post('/upload', params, {headers: {post: {'Content-Type': 'multipart/form-data'}}})
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
 
 }

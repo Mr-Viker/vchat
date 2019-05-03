@@ -6,7 +6,7 @@
       <div class="hd-l"><img :src="getImgURL(info.avatar)" alt="" class="img-avatar" v-if='info.avatar' @click='showImgPicker(info.avatar)'></div>
       <div class="hd-r">
         <div class="hd-r-t">{{info.username}}</div>
-        <div class="hd-r-m">微信号: {{info.vchat_id}}</div>
+        <div class="hd-r-m">VChat: {{info.vchat_id}}</div>
         <div class="hd-r-b">地区: {{info.area}}</div>
       </div>
     </div>

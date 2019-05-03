@@ -17,7 +17,7 @@ var instance = axios.create({
   // 后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream
   transformRequest: [function (data) {
     // 对 data 进行任意转换处理
-    return typeof data == 'object' && String(data) !== '[object File]' ? transformRequestData(data) : data;
+    return typeof data == 'object' && String(data) !== '[object File]' && String(data) !== '[object FormData]' ? transformRequestData(data) : data;
     // return data;
   }],
 
