@@ -2,7 +2,10 @@
   <section class="page moment-page">
     <div class="page-hd flex-v">
       <div class="hd-mask v-modal"></div>
-      <div class='hd-avatar'><img :src="getImgURL(info.avatar)" alt="" class="img-avatar"></div>
+      <div class='hd-avatar'>
+        <img :src="getImgURL(info.avatar)" alt="" class="img-avatar" v-if='info.avatar'>
+        <img src="../../assets/img/person/user-default.jpeg" alt="" class="img-avatar" v-else>
+      </div>
       <div class="hd-content">
         <div class="content-title">{{info.username}}</div>
         <div class="content-sub text-e">{{info.signature}}</div>
@@ -14,43 +17,85 @@
         <div class="card-hd">{{item.content}}</div>
         <div class="card-bd">
           <!-- <img :src="getImgURL(img)" alt="" v-for='img in item.imgs' class='img-thumb'> -->
-          <span class="img-container" v-for='img in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}"></span>
+          <span class="img-container" v-for='(img, index) in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}" @click.prevent='showImgPicker(item.imgs, index)'></span>
         </div>
         <div class="card-ft">{{item.created_at}}</div>
       </router-link>
     </div>
 
+    <img-picker :visible='visible' :imgs='imgs' :index='index'  @cancel='cancel'></img-picker>
   </section>
 </template>
 
 
 <script>
+import ImgPicker from '@/components/ImgPicker';
+
 export default {
   name: 'Moment',
+  components: {ImgPicker},
   data() {
     return {
+      id: '', //用户ID
       info: {}, //用户信息
       momentList: [], //记忆列表
       page: 1,
-      pageNum: 10,
+      pageNum: 15,
       loading: false, // 加载状态
-    }
+      visible: false, // 图片弹窗显示状态
+      imgs: [], //图片弹窗显示的图片数组
+      index: 0, //初始显示的图片索引
+      leaving: false, // 离开状态
+      }
   },
 
   created() {
-    var id = this.$route.query.id;
-    if (id) {
-      this.getInfo(id);
-      this.getMomentList(id);
-    } else {
+    if(!this.$route.query.id) {
       this.$router.back();
     }
   },
 
+  // 因为缓存了视图 所以每次显示都要判断是否是缓存的用户ID下的记忆列表 不是的话就重新加载
+  activated() {
+    this.leaving = false;
+    if (this.id != this.$route.query.id) {
+      this.id = this.$route.query.id;
+      this.reset();
+      this.getInfo();
+      this.getMomentList();
+    }
+  },
+
+  // 离开页面时触发 防止在其他缓存页滚动的时候触发本页面的滚动加载
+  deactivated() {
+    this.leaving = true;
+  },
+
+
   methods: {
+    // 重置
+    reset() {
+      this.info = {};
+      this.momentList = [];
+      this.page = 1;
+      this.loading = false;
+    },
+
+    // 关闭弹框
+    cancel() {
+      this.visible = false;
+    },
+    
+    // 点击图片事件
+    showImgPicker(imgs, index) {
+      this.imgs = imgs;
+      this.index = index;
+      this.visible = true;
+    },
+
     // 获取该用户信息
-    getInfo(id) {
-      this.$api.getUserInfo({id: id})
+    getInfo() {
+      this.$api.getUserInfo({id: this.id})
       .then(res => {
         if (res.code == '00') {
           this.info = res.data;
@@ -61,12 +106,12 @@ export default {
     },
 
     // 获取记忆列表
-    getMomentList(id) {
-      if (this.loading) {return;}
+    getMomentList() {
+      if (this.loading || this.leaving) {return;}
       this.loading = true;
 
       this.$api.getMomentList({
-        id: id,
+        id: this.id,
         page: this.page,
         pageNum: this.pageNum,
       }).then(res => {
@@ -83,7 +128,7 @@ export default {
       })
     },
 
-  }
+  },
 }
 </script>
 

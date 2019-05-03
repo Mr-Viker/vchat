@@ -2,7 +2,7 @@
   <section class="page register-page">
 
     <div class="page-hd flex-v">
-      <v-uploader input-name='file' :multi='true' crop='local' crop-ratio='1:1' @uploaded='uploaded'></v-uploader>
+      <v-uploader input-name='file' :show-img='form.avatar' crop='local' crop-ratio='1:1' @uploaded='uploaded'></v-uploader>
     </div>
     
     <div class="page-bd">

@@ -1,5 +1,5 @@
 <template>
-  <section class="page chat-page page-has-tab">
+  <section class="page chat-page page-has-chat-tab">
     <!-- 右上角添加联系人图标 -->
     <i class="iconfont icon-wo v-header-r" @click='$router.push({name: "PersonalDetail", query: {id: $route.query.id}})'></i>
 
@@ -9,11 +9,18 @@
         <!-- 对方发的 -->
         <div class="left-card" v-if='item.from_id == form.id'>
           <router-link :to="'/personalDetail?id=' + info.id"><img :src="getImgURL(info.avatar)" alt="" class="img-head"></router-link>
-          <div class="card-bd">{{item.content}}</div>
+          <!-- 图片 -->
+          <div class="card-bd card-bd-pic" v-if='item.content_type == 1'><img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'></div>
+          <!-- 文字 -->
+          <div class="card-bd" v-else>{{item.content}}</div>
         </div>
+
         <!-- 自己发的 -->
         <div class="right-card" v-else-if='item.from_id == userInfo.id'>
-          <div class="card-bd">{{item.content}}</div>
+          <!-- 图片 -->
+          <div class="card-bd card-bd-pic" v-if='item.content_type == 1'><img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'></div>
+          <!-- 文字 -->
+          <div class="card-bd" v-else>{{item.content}}</div>
           <router-link :to="'/personalDetail?id=' + userInfo.id"><img :src="getImgURL(userInfo.avatar)" alt="" class="img-head"></router-link>
         </div>
 
@@ -23,26 +30,37 @@
 
     <div class="page-ft">
       <form class="ft-form" @submit.prevent='submit' novalidate>
-        <i class="iconfont icon-84qiehuanyuyin ft-icon"></i>
+        <!-- <i class="iconfont icon-84qiehuanyuyin ft-icon"></i> -->
         <input type="text" class="ft-input" v-model='content'>
-        <i class="iconfont icon-add ft-icon"></i>
+        <!-- <i class="iconfont icon-add ft-icon"></i> -->
       </form>
+      <!-- 附加功能 -->
+      <div class="ft-b">
+        <v-uploader input-name='file' @uploaded='uploaded' icon='icon-tupian' class='ft-uploader'></v-uploader>
+        <!-- <i class="iconfont icon-84qiehuanyuyin ft-b-icon"></i> -->
+      </div>
     </div>
+
+    <img-picker :visible='visible' :imgs='imgs' @cancel='cancel'></img-picker>
   </section>
 </template>
 
 
 <script>
 import {mapState} from 'vuex';
+import VUploader  from '@/components/VUploader';
+import ImgPicker from '@/components/ImgPicker';
 
 export default {
   name: 'Chat',
+  components: { VUploader, ImgPicker },
   data() {
     return {
       form: {
         id: '',
         content: '',
-        type: 0,
+        content_type: 0, //内容类型 0文字 1图片
+        type: 0, // 对话类型 0用户-用户
       },
       // recordList: [], // 聊天记录列表
       page: 1,
@@ -50,6 +68,9 @@ export default {
       loading: false, // 加载状态
       info: {}, //对方用户信息
       content: '', //输入框内容
+
+      visible: false, // 图片弹窗显示状态
+      imgs: [], //图片弹窗显示的图片数组
     }
   },
 
@@ -85,14 +106,8 @@ export default {
       this.form.id = this.$route.query.id;
       this.info = {id: this.$route.query.id, username: this.$route.query.username, avatar: this.$route.query.avatar};
 
-      this.getChatRecord()
-      // .then(res => {
-      //   // 滚动到底部
-      //   var listH = document.getElementById('page-bd').offsetHeight;
-      //   var viewH = window.innerHeight - 96; // 96是header + footer 的高度
-      //   window.scrollTo(0, listH - viewH);
-      // })
-
+      this.getChatRecord();
+      
       // 如果有未读消息 则需要调用已读接口
       if (this.$route.query.num > 0) {
         this.readChat(this.$route.query.id);
@@ -104,6 +119,24 @@ export default {
   },
 
   methods: {
+    // 关闭弹框
+    cancel() {
+      this.visible = false;
+    },
+
+    // 点击图片事件
+    showImgPicker(imgs, index) {
+      this.imgs = [imgs];
+      this.visible = true;
+    },
+
+    // 上传图片后
+    uploaded(res) {
+      this.form.content = res.data[0];
+      this.form.content_type = 1;
+      this.submit();
+    },
+
     // 获取聊天记录列表
     getChatRecord() {
       if (this.loading) { 
@@ -134,21 +167,23 @@ export default {
 
     // 发送
     submit() {
-      this.form.content = this.content;
-      this.content = '';
+      if (!this.form.content_type) {
+        this.form.content = this.content;
+      }
+      
       if (this.validate(this.form)) {
         this.$api.send(this.form)
         .then(res => {
           if (res.code == '00') {
             // 新增一条聊天记录
             this.$store.commit('pushRecordList', res.data);
-
             // 更新chatList中和该用户的最后一条聊天记录
             var newItem = {};
             this.chatList.forEach((item) => {
               if (item.uid == this.form.id) {
                 newItem.avatar = item.avatar;
                 newItem.content = this.form.content;
+                newItem.content_type = this.form.content_type;
                 newItem.created_at = res.data.created_at;
                 newItem.is_accept = 0;
                 newItem.is_read = 0;
@@ -159,12 +194,21 @@ export default {
               }
             });
             this.$store.commit('addChatList', newItem);
+
+            this.resetForm();
           } else {
             this.$toast(res.msg);
           }
         })
       }
     },
+
+    // 重置表单
+    resetForm() {
+      this.content = '';
+      this.form.content = '';
+      this.form.content_type = 0;
+    }
 
   },
 
@@ -181,7 +225,10 @@ export default {
   
 .chat-page {
   // background: url('../../assets/img/chat/chat-bg.jpg') no-repeat fixed;
-  background-size: contain;
+  // background-size: contain;
+  &.page-has-chat-tab {
+    padding-bottom: .76rem !important;
+  }
 
   .v-header-r {
     top: .12rem;
@@ -199,17 +246,26 @@ export default {
         padding-top: .03rem;
         &.card-time-l {
           text-align: left;
-          padding-left: .55rem;
+          padding-left: .6rem;
         }
         &.card-time-r {
           text-align: right;
-          padding-right: .55rem;
+          padding-right: .6rem;
         }
       }
     }
 
     .img-head {
       min-width: .35rem;
+    }
+    .img-chat {
+      display: inline-block;
+      width: auto;
+      height: 1rem;
+      max-width: 50vh;
+    }
+    .card-bd-pic {
+      padding: 0 !important;
     }
 
     .left-card {
@@ -221,6 +277,7 @@ export default {
         padding: .1rem .15rem;
         border-radius: .05rem;
         margin-left: .1rem;
+        word-break: break-all;
         &::before {
           display: inline-block;
           content: '';
@@ -243,6 +300,7 @@ export default {
         padding: .1rem .15rem;
         border-radius: .05rem;
         margin-right: .1rem;
+        word-break: break-all;
         &::before {
           display: inline-block;
           content: '';
@@ -262,16 +320,19 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: .5rem;
+    // height: .5rem;
     background-color: @bgc;
-    // border-top: 1px solid @disabled-bgc;
+    border-top: 1px solid @disabled-bgc;
+    overflow: hidden;
+
     .ft-form {
       display: flex;
       align-items: center;
-      padding: 0 .1rem;
+      padding: .1rem .1rem .05rem;
       box-sizing: border-box;
       width: 100%;
-      height: 100%;
+      // height: .4rem;
+      overflow: hidden;
     }
     .ft-input {
       flex: 1;
@@ -287,6 +348,26 @@ export default {
     .ft-icon {
       font-size: .28rem;
       color: @gray-deep;
+    }
+
+    .ft-b {
+      padding: 0 .2rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .ft-uploader {
+      width: .3rem;
+      height: .3rem;
+      border: none;
+      .icon {
+        font-size: .3rem;
+      }
+    }
+    .ft-b-icon {
+      font-size: .26rem;
+      color: #fff;
     }
   }
 }

@@ -7,7 +7,7 @@
         <span class="mint-datetime-action mint-datetime-confirm" @click="confirm">确定</span>
       </div>
 
-      <mt-field placeholder="请输入..." type='textarea' rows='3' v-model="content"></mt-field>
+      <mt-field placeholder="请输入..." type='textarea' rows='6' v-model="content"></mt-field>
     </mt-popup>
   </section>
 </template>

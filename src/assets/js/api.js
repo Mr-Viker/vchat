@@ -235,4 +235,12 @@ export default {
     .catch(err => console.log(err)); 
   },
 
+  // 删除和对方的聊天列表
+  delChatList(params) {
+    return axios.post('/chat/del', params)
+    .then(res => res.data)
+    .catch(err => console.log(err)); 
+  },
+
+
 }

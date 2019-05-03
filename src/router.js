@@ -41,6 +41,7 @@ export default new Router({
         showTab: true,
         showBack: false,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -53,6 +54,7 @@ export default new Router({
         showTab: true,
         showBack: false,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -65,6 +67,7 @@ export default new Router({
         showTab: true,
         showBack: false,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -77,6 +80,7 @@ export default new Router({
         showTab: true,
         showBack: false,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -89,6 +93,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: false,
+        keepAlive: false,
       }
     },
     {
@@ -101,6 +106,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: false,
+        keepAlive: false,
       }
     },
     {
@@ -113,6 +119,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: false,
+        keepAlive: false,
       }
     },
     {
@@ -125,6 +132,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: false,
       }
     },
     {
@@ -137,6 +145,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: false,
       }
     },
     {
@@ -149,6 +158,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -161,6 +171,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -173,6 +184,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: false,
       }
     },
     {
@@ -185,6 +197,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: false,
       },
       beforeEnter: (to, from, next) => {
         Api.getUserInfo({id: to.query.id})
@@ -210,6 +223,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: false,
       }
     },
     {
@@ -222,6 +236,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: true,
       }
     },
     {
@@ -234,6 +249,7 @@ export default new Router({
         showTab: false,
         showBack: true,
         requireAuth: true,
+        keepAlive: false,
       }
     },
 
@@ -243,5 +259,31 @@ export default new Router({
       path: '*',
       redirect: '/'
     },
-  ]
+  ],
+
+  scrollBehavior (to, from, savedPosition) {
+    // 好像因为使用了keepAlive缓存视图，所以scrollBehavior表现的有些不同
+    // keepAlive为true的页面共用一个savedPosition
+
+    // savedPosition是to最后的位置信息 首次是null 以后每次都是window.pageXOffset和window.pageYOffset
+    // console.log('scrollBehavior: ', savedPosition);
+
+    // 共有四种情况
+    // 1.不缓存->不缓存 此时savedPosition为0 滚动到顶部 
+    // 2.不缓存->缓存 此时的savedPosition为to页面上次滚动的位置，赋值给to.meta.savedPosition 然后滚动到to.meta.savedPosition 这也是scrollBehavior默认行为
+    // 3.缓存->缓存 此时的savedPosition为当前window滚动的位置信息，赋值给from.meta.savedPosition 然后滚动到to.meta.Position 没有则滚动到顶部
+    // 4.缓存->不缓存 此时savedPosition为0 滚动到顶部 
+    if (to.meta.keepAlive) {
+      if (from.meta.keepAlive) {
+        from.meta.savedPosition = savedPosition;
+        if (to.meta.savedPosition) {
+          return to.meta.savedPosition;
+        }
+      } else {
+        to.meta.savedPosition = savedPosition;
+        return to.meta.savedPosition;
+      }
+    }
+    return { x: 0, y: 0 };
+  }
 })

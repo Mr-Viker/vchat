@@ -3,7 +3,7 @@
     <v-header :show-back='true'></v-header>
 
     <div class="page-hd">
-      <div class="hd-l"><img :src="getImgURL(info.avatar)" alt="" class="img-avatar" v-if='info.avatar'></div>
+      <div class="hd-l"><img :src="getImgURL(info.avatar)" alt="" class="img-avatar" v-if='info.avatar' @click='showImgPicker(info.avatar)'></div>
       <div class="hd-r">
         <div class="hd-r-t">{{info.username}}</div>
         <div class="hd-r-m">微信号: {{info.vchat_id}}</div>
@@ -31,6 +31,9 @@
       <mt-button type="danger" v-if='info.is_contact' size='large' class='content-cell btn-del' @click.native='delContact'>删除好友</mt-button>
       <div class="content-cell" v-else @click="addContact">添加到通讯录</div>
     </div>
+
+    <!-- 图片弹框 -->
+    <img-picker :visible='visible' :imgs='imgs' :index='index' @cancel='cancel'></img-picker>
   </section>
 </template>
 
@@ -39,13 +42,17 @@
 import VHeader from '@/components/VHeader';
 import {mapState} from 'vuex';
 import {getPinYinFirstCharacter} from '@/assets/js/pinyin';
+import ImgPicker from '@/components/ImgPicker';
 
 export default {
   name: 'PersonalDetail',
-  components: {VHeader},
+  components: {VHeader, ImgPicker},
   data() {
     return {
       info: {}, //用户信息
+      visible: false, // 图片弹窗显示状态
+      imgs: [], //图片弹窗显示的图片数组
+      index: 0, //初始显示的图片索引
     };
   },
 
@@ -63,6 +70,17 @@ export default {
   },
 
   methods: {
+    // 关闭图片弹框
+    cancel() {
+      this.visible = false;
+    },
+    
+    // 点击图片事件
+    showImgPicker(imgs) {
+      this.imgs = [imgs];
+      this.visible = true;
+    },
+
     // 获取该用户信息
     getInfo(id) {
       this.$api.getUserInfo({id: id})

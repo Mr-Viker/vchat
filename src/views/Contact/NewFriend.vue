@@ -36,6 +36,7 @@ export default {
       page: 1,
       pageNum: 15,
       loading: false, //加载状态
+      leaving: false, // 离开状态
     }
   },
 
@@ -52,6 +53,15 @@ export default {
     }
   },
 
+  activated() {
+    this.leaving = false;
+  },
+
+  // 离开页面时触发 防止在其他缓存页滚动的时候触发本页面的滚动加载
+  deactivated() {
+    this.leaving = true;
+  },
+
   methods: {
     // 告知已读添加请求列表
     readAddContact() {
@@ -65,7 +75,7 @@ export default {
 
     // 获取添加通讯录好友请求列表
     getAddContactList() {
-      if (this.loading) {return;}
+      if (this.loading || this.leaving) {return;}
       this.loading = true;
       this.$api.getAddContactList({page: this.page, pageNum: this.pageNum})
       .then(res => {
@@ -103,8 +113,15 @@ export default {
       })
     }
 
-  }
+  },
 
+  beforeRouteLeave(to, from, next) {
+    // 如果当前页没有缓存视图 则修改为缓存视图 (因为有新的添加好友请求时会修改为不缓存)
+    if (!this.$route.meta.keepAlive) {
+      this.changeKeepAlive('NewFriend', true);
+    }
+    next();
+  }
 }
 </script>
 

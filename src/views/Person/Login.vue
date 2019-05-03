@@ -4,7 +4,7 @@
     <div class="page-hd flex-v">
       <div class="v-uploader">
         <img :src="getImgURL(avatar)" alt="" v-if='avatar' class="img-response">
-        <img src="../../assets/img/person/user-default.jpeg" alt="" class="img-response" v-else>
+        <!-- <img src="../../assets/img/person/user-default.jpeg" alt="" class="img-response" v-else> -->
       </div>
     </div>
     

@@ -7,10 +7,7 @@
     </div>
 
     <div class="page-bd">
-      <v-uploader input-name='file' @uploaded='uploaded' :show-del='true' @del='del(i)' v-for='i in (form.imgs.length + 1)' v-if='i < 5'></v-uploader>
-      <!-- <v-uploader input-name='file' @uploaded='uploaded'></v-uploader> -->
-      <!-- <v-uploader input-name='file' @uploaded='uploaded'></v-uploader> -->
-      <!-- <v-uploader input-name='file' @uploaded='uploaded'></v-uploader> -->
+      <v-uploader input-name='file' @uploaded='uploaded' :index='i' :show-img='form.imgs[i-1]' :show-del='true' @del='del(i)' v-for='i in (form.imgs.length + 1)' v-if='i < 5'></v-uploader>
     </div>
   </section>
 </template>
@@ -38,6 +35,8 @@ export default {
         this.$api.createMoment(this.form)
         .then(res => {
           if (res.code == '00') {
+            // 修改个人页面为不缓存视图 需要重新加载
+            this.changeKeepAlive('Person', false);
             this.$router.push({name: 'Person'});
           } else {
             this.$toast(res.msg);
@@ -47,15 +46,13 @@ export default {
     },
 
     // 读取头像后
-    uploaded(res) {
-      this.form.imgs.push(res.data[0]);
+    uploaded(res, i) {
+      this.$set(this.form.imgs, i - 1, res.data[0]);
     },
 
     // 删除上传的图片
     del(i) {
-      console.log('i: ', i);
       this.form.imgs.splice(i - 1, 1);
-      console.log('imgs: ', this.form.imgs);
     },
   }
 

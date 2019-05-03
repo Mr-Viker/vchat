@@ -17,8 +17,8 @@ export default new Vuex.Store({
     totalContactNum: 0, //通讯录好友总数
     chatList: [], //聊天列表
     recordList: [], //聊天记录
-    // scrollTop1: 0, //记录广场tab上次停留的位置
-    // scrollTop2: 0, //记录好友tab上次停留的位置
+    plazaMomentList: [], // 广场记忆列表
+    friendMomentList: [], // 好友记忆列表
   },
 
   mutations: {
@@ -140,14 +140,34 @@ export default new Vuex.Store({
       state.recordList.push(payload);
     },
 
-    // setScrollTop1(state, payload) {
-    //   state.scrollTop1 = payload;
-    // },
+    setPlazaMomentList(state, payload) {
+      state.plazaMomentList = payload;
+    },
 
-    // setScrollTop2(state, payload) {
-    //   state.scrollTop2 = payload;
-    // },
+    setFriendMomentList(state, payload) {
+      state.friendMomentList = payload;
+    },
 
+    // payload = {index: 0, key: 'is_like/like_num/comment_num', value: 1}
+    editPlazaMomentList(state, payload) {
+      if (Array.isArray(payload)) {
+        payload.forEach(item => {
+          state.plazaMomentList[item.index][item.key] = item.value;
+        })
+      } else {
+        state.plazaMomentList[payload.index][payload.key] = payload.value;
+      }
+    },
+
+    editFriendMomentList(state, payload) {
+      if (Array.isArray(payload)) {
+        payload.forEach(item => {
+          state.friendMomentList[item.index][item.key] = item.value;
+        })
+      } else {
+        state.friendMomentList[payload.index][payload.key] = payload.value;
+      }
+    },
 
   },
 

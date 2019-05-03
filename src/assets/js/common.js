@@ -77,6 +77,7 @@ export default {
       })
     }
 
+
     // 获取通讯录列表
     Vue.prototype.getContactList = function() {
       return this.$api.getContactList()
@@ -90,6 +91,7 @@ export default {
         return res;
       })
     }
+
 
     // 格式化通讯录数组
     Vue.prototype.formatContact = function(data) {
@@ -113,6 +115,18 @@ export default {
       })
 
       return res;
+    }
+
+
+    // 修改视图缓存状态
+    Vue.prototype.changeKeepAlive = function(name, status) {
+      var routes = this.$router.options.routes;
+      for (var i = routes.length - 1; i >= 0; i--) {
+        if (routes[i].name == name) {
+          routes[i].meta.keepAlive = status;
+          break;
+        }
+      }
     }
 
   }

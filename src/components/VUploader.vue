@@ -1,8 +1,9 @@
 <template>
-  <vue-core-image-upload :url='options.url' text='' :inputOfFile='options.inputName' compress='70' :isXhr='true' :credentials='false' :headers='options.headers' @imageuploading="uploading" @imageuploaded="uploaded" @errorhandle="errorhandle" inputAccept='image/*' class='v-uploader flex-v' :multiple="options.multiple" :multiple-size="4" :crop="crop" :crop-ratio='cropRatio'>
-    <i class="iconfont icon-photography icon" v-if='!imgs'></i>
-    <img :src="getImgURL(item)" alt="" class="img-response" v-for='item in imgs' :key='item'>
-    <i class="mintui mintui-field-error icon-del" v-if='showDel && imgs' @click='del'></i>
+  <vue-core-image-upload :url='options.url' text='' :inputOfFile='options.inputName' compress='70' :isXhr='true' :credentials='false' :headers='options.headers' @imageuploading="uploading" @imageuploaded="uploaded" @errorhandle="errorhandle" inputAccept='image/*' class='v-uploader flex-v' :crop="crop" :crop-ratio='cropRatio' :crop-btn="{ok:'确定','cancel':'取消'}">
+    <img :src="getImgURL(showImg)" alt="" class="img-response" v-if='showImg'>
+    <i :class="['iconfont icon', icon]" v-else-if='icon'></i>
+    <i class="iconfont icon-photography icon" v-else></i>
+    <i class="mintui mintui-field-error icon-del" v-if='showDel && showImg' @click='del'></i>
   </vue-core-image-upload>
 </template>
 
@@ -13,7 +14,11 @@ import VueCoreImageUpload  from 'vue-core-image-upload';
 export default {
   name: 'VUploader',
   components: {VueCoreImageUpload},
-  props: [ 'inputName', 'multi', 'showDel', 'crop', 'cropRatio'],
+  // index: 主要用于发布记忆时知道当前是第几个vuploader
+  // showImg: 用于上传图片后的显示
+  // cropRatio: 裁剪比例 1:1 auto 
+  // icon: 未上传图像时的显示图标
+  props: [ 'inputName', 'showDel', 'crop', 'cropRatio', 'index', 'showImg', 'icon'],
   data() {
     return {
       // 上传图片配置
@@ -21,17 +26,16 @@ export default {
         url: this.$store.state.baseURL + '/upload',
         // headers: {'token': window.localStorage.getItem('token') ? 'bearer ' + window.localStorage.getItem('token') : ''},
         inputName: this.inputName,
-        multiple: this.multi || false,
         extensions: 'png, jpeg, jpg, gif',
       },
-      imgs: '', //预览图片地址
+      // imgs: '', //预览图片地址
     };
   },
 
   methods: {
     // 删除该上传的图片
     del() {
-      this.imgs = '';
+      // this.imgs = '';
       this.$emit('del');
     },
 
@@ -44,11 +48,11 @@ export default {
     uploaded(res) {
       this.$indicator.close();
       if (res.code === '00') {
-        this.imgs = res.data;
+        // this.imgs = res.data;
+        this.$emit('uploaded', res, this.index);
       } else {
         this.$toast(res.msg);
       }
-      this.$emit('uploaded', res);
     },
 
     // 上传失败

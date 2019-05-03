@@ -2,7 +2,10 @@
   <div id="app">
     <v-header :title='title' v-if='showHd' :show-back='showBack'></v-header>
 
-    <router-view :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/>
+    <!-- 需要被缓存的视图 -->
+    <keep-alive><router-view v-if='keepAlive' :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/></keep-alive>
+    <!-- 不需要被缓存的视图 -->
+    <router-view  v-if='!keepAlive' :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/>
 
     <v-tabbar v-if='showTab'></v-tabbar>
   </div>
@@ -21,6 +24,7 @@ export default {
     showHd() { return this.$route.meta.showHd; },
     showTab() { return this.$route.meta.showTab; },
     showBack() { return this.$route.meta.showBack; },
+    keepAlive() { return this.$route.meta.keepAlive; },
   },
 
   created() {
@@ -67,6 +71,8 @@ export default {
     // 新的添加通讯录好友请求
     onAddContact(res) {
       this.$store.commit('setNewAddContactNum', this.$store.state.newAddContactNum + 1);
+      // 修改新的朋友页面为不缓存 重新加载请求列表
+      this.changeKeepAlive('NewFriend', false);
     },
 
     // 对方同意你的添加通讯录好友请求
@@ -116,8 +122,6 @@ export default {
         } else {
           next();
         }
-        // 每次路由跳转都会滚动到顶部
-        window.scrollTo(0, 0);
       })
     },
 

@@ -11,7 +11,7 @@
       <div class="hd-c">
         <div>{{ detail.content }}</div>
         <div class="hd-c-imgs">
-          <img :src="getImgURL(img)" alt="" v-for='img in detail.imgs' class="img-moment">
+          <img :src="getImgURL(img)" alt="" v-for='(img, index) in detail.imgs' class="img-moment" @click='showImgPicker(detail.imgs, index)'>
         </div>
       </div>
       <!-- 点赞评论 -->
@@ -45,17 +45,21 @@
       </div>
     </div>
 
+    <!-- 评论弹框 -->
     <comment-picker :visible='commentPickerVisible' @confirm='confirm' @cancel='cancel'></comment-picker>
+    <!-- 图片弹框 -->
+    <img-picker :visible='visible' :imgs='imgs' :index='index' @cancel='cancelImgPicker'></img-picker>
   </section>
 </template>
 
 
 <script>
 import CommentPicker from '@/components/CommentPicker';
+import ImgPicker from '@/components/ImgPicker';
 
 export default {
   name: 'MomentDetail',
-  components: {CommentPicker},
+  components: {CommentPicker, ImgPicker},
   data() {
     return {
       detail: {}, // 记忆详情
@@ -68,7 +72,10 @@ export default {
       form: {
         id: '', //记忆ID
         content: '', //评论内容
-      }
+      },
+      visible: false, // 图片弹窗显示状态
+      imgs: [], //图片弹窗显示的图片数组
+      index: 0, //初始显示的图片索引
     }
   },
 
@@ -85,6 +92,18 @@ export default {
   },
 
   methods: {
+    // 关闭图片弹框
+    cancelImgPicker() {
+      this.visible = false;
+    },
+
+    // 点击图片事件
+    showImgPicker(imgs, index) {
+      this.imgs = imgs;
+      this.index = index;
+      this.visible = true;
+    },
+
     // 评论别人的评论
     comment(toUid) {
       this.form.toUid = toUid;
@@ -99,6 +118,10 @@ export default {
         if (res.code == '00') {
           this.cancel();
           this.commentList.unshift(res.data);
+          this.$set(this.detail, 'comment_num', this.detail.comment_num + 1);
+
+          // 如果是从发现tab页进来的 则还需要修改tab页缓存的数据列表
+          this.checkFromForUpdate('comment');
         } else {
           this.$toast(res.msg);
         }
@@ -122,6 +145,9 @@ export default {
           this.$set(this.detail, 'is_like', 1);
           this.$set(this.detail, 'like_num', this.detail.like_num + 1);
           this.likeLoading = false;
+
+          // 如果是从发现tab页进来的 则还需要修改tab页缓存的数据列表
+          this.checkFromForUpdate('like');
         } else {
           this.$toast(res.msg);
         }
@@ -139,6 +165,9 @@ export default {
           this.$set(this.detail, 'is_like', 0);
           this.$set(this.detail, 'like_num', this.detail.like_num - 1);
           this.likeLoading = false;
+
+          // 如果是从发现tab页进来的 则还需要修改tab页缓存的数据列表
+          this.checkFromForUpdate('unlike');
         } else {
           this.$toast(res.msg);
         }
@@ -180,7 +209,35 @@ export default {
         }
         return res;
       })
+    },
+
+    // 检测路由是否有来源，有的话则修改相应的vuex存储的数据 用于解决更新在本页面的操作但是来源缓存页没有更新的问题
+    checkFromForUpdate(type) {
+      var from = this.$route.query.from;
+      var index = this.$route.query.index;
+      if (type == 'like') {
+        var change = [
+          {index: index, key: 'is_like', value: 1},
+          {index: index, key: 'like_num', value: this.detail.like_num},
+        ];
+      } else if (type == 'unlike') {
+        var change = [
+          {index: index, key: 'is_like', value: 0},
+          {index: index, key: 'like_num', value: this.detail.like_num},
+        ];
+      } else if (type == 'comment') {
+        var change = [
+          {index: index, key: 'comment_num', value: this.detail.comment_num},
+        ];
+      }
+
+      if (from == 'plaza') {
+        this.$store.commit('editPlazaMomentList', change);
+      } else if (from == 'friend') {
+        this.$store.commit('editFriendMomentList', change);
+      }
     }
+
   }
 
 }

@@ -56,6 +56,15 @@ export default {
     }
   },
 
+  updated() {
+    // 右边索引列表点击事件 因为要做到回到本页面原先停留的位置 所以修改了indexlist高度导致了mint-ui的索引列表失效问题
+    document.querySelectorAll('.mint-indexlist-navitem').forEach((item, index) => {
+      item.addEventListener('click', function(ev) {
+        var offsetTop = document.querySelectorAll('.mint-indexsection')[index].offsetTop
+        window.scrollTo(0, offsetTop);
+      })
+    })
+  },
 }
 </script>
 
@@ -75,17 +84,23 @@ export default {
       background-color: @red;
       margin-right: .2rem;
     }
+
     .mint-indexsection-index {
       padding: .02rem 0 .02rem .15rem;
       background-color: @bgc;
     }
     .mint-indexlist-content {
       margin-right: 0 !important;
+      height: auto !important;
     }
     .mint-indexlist-nav {
+      position: fixed;
       background: none;
       border-left: none;
       color: @gray;
+    }
+    .mint-indexlist-indicator {
+      position: fixed;
     }
 
     .list-tips {

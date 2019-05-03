@@ -1,6 +1,6 @@
 <template>
   <mt-tabbar v-model="selected" class='v-tabbar'>
-    <mt-tab-item :id="item.id" v-for='item in tabs' :key='item.id' @click.native='goto(item.link)'>
+    <mt-tab-item :id="item.id" v-for='item in tabs' :key='item.id' :href="'#' + item.link">
       <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.id == "/" && newChatNum > 0'>{{newChatNum}}</mt-badge>
       <mt-badge type="error" size='small' class='tab-item-badge' v-if='item.id == "/contact" && newAddContactNum > 0'>{{newAddContactNum}}</mt-badge>
       <i :class="['iconfont', item.icon]" slot='icon'></i>
@@ -39,11 +39,11 @@ export default {
     })
   },
 
-  methods: {
-    goto(url) {
-      return this.$router.replace({path: url});
-    }
-  }
+  // methods: {
+  //   goto(url) {
+  //     return this.$router.replace({path: url});
+  //   }
+  // }
 } 
 </script>
 
