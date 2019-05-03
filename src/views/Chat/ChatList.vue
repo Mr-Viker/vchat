@@ -6,7 +6,7 @@
       <mt-cell-swipe :title="item.username" 
         :label="item.content_type == 1 ? '[图片]' : (item.content_type == 2 ? '[语音]' : item.content)"
         :to="'/Chat?id=' + item.uid + '&num=' + item.new_chat_num" class='v-cell v-cell-2' v-for='(item, index) in chatList' :key='item.uid' :right="[{content: '删 除', style: { background: '#f44336', color: '#fff', width: '.7rem' }, handler: () => delChatList(item)}]">
-        <img slot="icon" :src="getImgURL(item.avatar)" class='img-head' v-if='!item.avatar'>
+        <img slot="icon" :src="getImgURL(item.avatar)" class='img-head' v-if='item.avatar'>
         <img slot="icon" src="../../assets/img/person/user-default.jpeg" alt="" class="img-head" v-else>
         <mt-badge type="error" size='small' class='v-cell-badge' v-if='item.new_chat_num > 0'>{{ item.new_chat_num }}</mt-badge>
         <span class='btn-txt'>{{ item.created_at.split(' ')[1].substr(0, 5) }}</span>
