@@ -44,7 +44,7 @@
       <form class="ft-form" @submit.prevent='submit' novalidate>
         <!-- <i class="iconfont icon-84qiehuanyuyin ft-icon"></i> -->
         <input type="text" class="ft-input" v-model='content'>
-        <!-- <i class="iconfont icon-add ft-icon"></i> -->
+        <i class="iconfont icon-send ft-icon" @click='submit'></i>
       </form>
       <!-- 附加功能 -->
       <div class="ft-b">
@@ -231,6 +231,7 @@ export default {
             this.$toast(res.msg);
           }
         }).catch(err => {
+          this.resetForm();
           this.$toast({message: '连接IM超时, 已缓存至数据库，稍后请刷新消息记录以确认是否发送成功', duration: 5000});
         })
       }
@@ -388,8 +389,8 @@ export default {
       }
     }
     .ft-icon {
-      font-size: .28rem;
-      color: @gray-deep;
+      font-size: .24rem;
+      color: @blue;
     }
 
     .ft-b {

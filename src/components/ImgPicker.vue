@@ -1,6 +1,6 @@
 <template>
   <div class="img-picker" v-if='visible' @click='cancel'>
-    <div class="v-modal"></div>
+    <div class="v-modal img-picker-modal"></div>
     <mt-swipe :auto="0" :show-indicators="false" :continuous='false' :default-index='index'>
       <mt-swipe-item v-for='item in imgs' ><img :src="getImgURL(item)" alt="" class="img-w"></mt-swipe-item>
     </mt-swipe>
@@ -38,6 +38,9 @@ export default {
   left: 0;
   top: 0;
   touch-action: none;
+  .img-picker-modal {
+    opacity: 1;
+  }
 
   .img-w {
     position: fixed;
