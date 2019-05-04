@@ -3,7 +3,6 @@
   <div class="v-audio">
     <i class="iconfont icon-huatongyuyin audio-icon icon-1" @touchstart.prevent='start1' @touchend.prevent='stop1' v-if='isApp()'></i>
     <i class="iconfont icon-huatongyuyin audio-icon icon-2" @touchstart.prevent='start2' @touchend.prevent='stop2' v-else></i>
-    <!-- <audio class='audio-player' ref='player'></audio> -->
   </div>
 </template>
 

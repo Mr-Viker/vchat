@@ -288,7 +288,7 @@ export default {
   // background: url('../../assets/img/chat/chat-bg.jpg') no-repeat fixed;
   // background-size: contain;
   &.page-has-chat-tab {
-    padding-bottom: .76rem !important;
+    padding-bottom: .86rem !important;
   }
 
   .v-header-r {
