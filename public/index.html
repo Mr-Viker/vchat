@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="//images2015.cnblogs.com/blog/528573/201609/528573-20160902122334215-1428383567.png">
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1148199_ogudrgvpl4b.css">
     <style>
-      /*.welcome {
+      .welcome {
         width: 100%;
         height: 100%;
         z-index: 1000;
@@ -27,7 +27,7 @@
       .away {
         opacity: 0;
         transform: scale(1.5);
-      }*/
+      }
       #vc {
         position: fixed;
         z-index: 999;
@@ -54,15 +54,29 @@
     <div id="app"></div>
 
 
-    <div id="vc"></div>
     <!--mask layer--> 
-    <!-- <div class="welcome" id="welcome"></div> -->
+    <div class="welcome" id="welcome"></div>
     
+    <div id="vc"></div>
     <!-- vconsole插件 -->
     <script src="lib/vconsole.min.js"></script>
     <script>
       (function() {
         'use strict';
+
+        // 启动界面
+        if (!window.plus) {
+          var welcome = document.getElementById('welcome');
+          var index = Math.ceil(Math.random() * 5);
+          welcome.style.background = "url(/launch/launch-" + index + ".png) no-repeat center/cover";
+
+          setTimeout(function() {
+            welcome.classList.add('away');
+          }, 1000);
+          setTimeout(function() {
+            welcome.parentNode.removeChild(welcome);
+          }, 2000);
+        }
 
         // vconsloe 点击vc七次召唤神龙
         new VConsole();
@@ -89,21 +103,11 @@
         }
 
 
+        // 禁止浏览器右键和app长按出现的拷贝等功能
         document.oncontextmenu = function() {
           return false;
         };
 
-        // 启动界面
-        // var welcome = document.getElementById('welcome');
-        // var index = Math.ceil(Math.random() * 5);
-        // welcome.style.background = "url(/launch/launch-" + index + ".png) no-repeat center/cover";
-
-        // setTimeout(function() {
-        //   welcome.classList.add('away');
-        // }, 1000);
-        // setTimeout(function() {
-        //   welcome.parentNode.removeChild(welcome);
-        // }, 2000);
       })();
     </script>
 
