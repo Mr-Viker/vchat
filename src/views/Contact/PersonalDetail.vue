@@ -78,7 +78,11 @@ export default {
     // 点击图片事件
     showImgPicker(imgs) {
       this.imgs = [imgs];
-      this.visible = true;
+      if (this.isApp()) {
+        this.previewImage(this.imgs, 0);
+      } else {
+        this.visible = true;
+      }
     },
 
     // 获取该用户信息
@@ -138,6 +142,20 @@ export default {
       })
     }
   },
+
+  beforeRouteEnter(to, from, next) {
+    if (window.plus) {
+      plus.navigator.setStatusBarBackground('#fff');
+    }
+    next();
+  },
+
+  beforeRouteLeave(to, from, next) {
+    if (window.plus) {
+      plus.navigator.setStatusBarBackground('#ededed');
+    }
+    next();
+  }
 } 
 </script>
 

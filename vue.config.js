@@ -6,7 +6,7 @@ var path = require('path')
 
 module.exports = {
   // 项目部署的基础路径
-  publicPath: '/',
+  publicPath: './',
   // 构建好的文件输出到哪里
   outputDir: 'dist',
   lintOnSave: false,

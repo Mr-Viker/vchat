@@ -18,7 +18,7 @@
         <div class="card-hd">{{item.content}}</div>
         <div class="card-bd">
           <!-- <img :src="getImgURL(img)" alt="" v-for='img in item.imgs' class='img-thumb'> -->
-          <span class="img-container" v-for='(img, index) in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}" @click.prevent='showImgPicker(item.imgs, index)'></span>
+          <span class="img-container" v-for='(img, index) in item.imgs' @click.prevent='showImgPicker(item.imgs, index)'><img v-lazy='getImgURL(img)' class="img-full"></span>
         </div>
         <div class="card-ft">{{item.created_at}}</div>
       </router-link>
@@ -76,9 +76,13 @@ export default {
 
     // 点击图片事件
     showImgPicker(imgs, index) {
-      this.imgs = imgs;
-      this.index = index;
-      this.visible = true;
+      if (this.isApp()) {
+        this.previewImage(imgs, index);
+      } else {
+        this.imgs = imgs;
+        this.index = index;
+        this.visible = true;
+      }
     },
 
     // 获取记忆列表
@@ -104,10 +108,21 @@ export default {
     },
   },
 
+  beforeRouteEnter(to, from, next) {
+    if (window.plus) {
+      plus.navigator.setStatusBarBackground('#d0d1d6');
+    }
+    next();
+  },
+
   beforeRouteLeave(to, from, next) {
     // 如果当前页没有缓存视图 则修改为缓存视图 (因为发布记忆后会修改个人页面为不缓存)
     if (!this.$route.meta.keepAlive) {
       this.changeKeepAlive('Person', true);
+    }
+
+    if (window.plus) {
+      plus.navigator.setStatusBarBackground('#ededed');
     }
     next();
   }

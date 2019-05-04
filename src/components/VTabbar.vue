@@ -54,7 +54,7 @@ export default {
 .v-tabbar {
   position: fixed;
   z-index: 100;
-  background: #f9f9f9;
+  background: rgba(249, 249, 249,.99);
   border-top: 1px solid @border-c;
   color: #929292;
   .mint-tab-item.is-selected {
@@ -62,14 +62,14 @@ export default {
     color: @blue;
   }
   .mint-tab-item {
-    padding: 4px 0;
+    // padding: 4px 0;
   }
   .iconfont {
     font-size: .24rem;
   }
   .mint-tab-item-label {
     position: relative;
-    transform: scale(0.9);
+    // transform: scale(0.9);
   }
   .tab-item-badge {
     position: absolute;

@@ -17,7 +17,7 @@
         <div class="card-hd">{{item.content}}</div>
         <div class="card-bd">
           <!-- <img :src="getImgURL(img)" alt="" v-for='img in item.imgs' class='img-thumb'> -->
-          <span class="img-container" v-for='(img, index) in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}" @click.prevent='showImgPicker(item.imgs, index)'></span>
+          <span class="img-container" v-for='(img, index) in item.imgs' @click.prevent='showImgPicker(item.imgs, index)'><img v-lazy='getImgURL(img)' class="img-full"></span>
         </div>
         <div class="card-ft">{{item.created_at}}</div>
       </router-link>
@@ -88,9 +88,13 @@ export default {
     
     // 点击图片事件
     showImgPicker(imgs, index) {
-      this.imgs = imgs;
-      this.index = index;
-      this.visible = true;
+      if (this.isApp()) {
+        this.previewImage(imgs, index);
+      } else {
+        this.imgs = imgs;
+        this.index = index;
+        this.visible = true;
+      }
     },
 
     // 获取该用户信息
@@ -129,6 +133,7 @@ export default {
     },
 
   },
+  
 }
 </script>
 

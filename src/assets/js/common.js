@@ -6,6 +6,11 @@ import {getPinYinFirstCharacter} from '@/assets/js/pinyin';
 
 export default {
   install(Vue, opts) {
+    // 判断是否是APP
+    Vue.prototype.isApp = function() {
+      return window.plus || !window.location.host;
+    }
+
     // 判断是否是微信浏览器
     Vue.prototype.isWeChat = function() {
       return /micromessenger/.test(navigator.userAgent.toLowerCase());
@@ -127,6 +132,13 @@ export default {
           break;
         }
       }
+    }
+
+
+    // App内预览图片
+    Vue.prototype.previewImage = function(imgs, index) {
+      imgs = imgs.map(item => {return this.getImgURL(item);});
+      plus.nativeUI.previewImage(imgs, {current: index, indicator: 'none'});
     }
 
   }

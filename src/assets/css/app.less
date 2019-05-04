@@ -11,13 +11,30 @@ html {
 body {
   font-size: 14px;
   background-color: #ededed;
-  color: #333;
+  color: #000;
 }
 
 a {
   text-decoration: none;
   color: inherit;
 }
+a:hover,
+a:active,
+a:visited,
+a:link,
+a:focus {
+  outline: none;
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -moz-user-focus: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -moz-user-focus: none;
+}
+
 
 #app {
   position: relative;
@@ -32,7 +49,7 @@ a {
   padding-top: .46rem !important;
 }
 .page-has-tab {
-  padding-bottom: .5rem !important;
+  padding-bottom: .56rem !important;
 }
 .page-has-search {
   padding-top: .86rem !important;
@@ -162,7 +179,16 @@ a {
   margin-right: .1rem;
   margin-bottom: .1rem;
 }
-
+.img-full {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+img[lazy=loading] {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
 
 /* upload */
 .v-uploader {

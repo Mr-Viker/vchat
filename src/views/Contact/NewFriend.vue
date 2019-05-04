@@ -1,9 +1,9 @@
 <template>
-  <section class="page new-friend-page page-has-search">
+  <section class="page new-friend-page">
     <!-- 右上角添加联系人图标 -->
     <i class="iconfont icon-jiahaoyou v-header-r" @click='$router.push({name: "AddContact"})'></i>
 
-    <v-search></v-search>
+    <!-- <v-search></v-search> -->
 
     <div class="page-hd">
       <i class="iconfont icon-iphone"></i>

@@ -4,7 +4,7 @@
     <i class="iconfont icon-wo v-header-r" @click='$router.push({name: "PersonalDetail", query: {id: $route.query.id}})'></i>
 
     <!-- 列表区域 -->
-    <mt-loadmore class='page-bd' id='page-bd' :top-method="getChatRecord" ref="loadmore" top-pull-text='下拉加载' :top-distance='30' :cancelable='false'>
+    <mt-loadmore class='page-bd' id='page-bd' :top-method="getChatRecord" ref="loadmore" top-pull-text='下拉加载' :top-distance='50' :cancelable='false'>
       <div :class="['chat-card', 'chat-card-' + index]" v-for='(item, index) in recordList'>
         <!-- 对方发的 -->
         <div class="left-card" v-if='item.from_id == form.id'>
@@ -14,7 +14,7 @@
             <img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'>
           </div>
           <!-- 语音 -->
-          <div class="card-bd card-bd-audio" v-else-if='item.content_type == 2' @click='play(item.content)'>
+          <div class="card-bd card-bd-audio" v-else-if='item.content_type == 2' @click='startPlay(index)'>
             <i class="iconfont icon-yuyinzuo"></i> {{ item.duration }}s
           </div>
           <!-- 文字 -->
@@ -28,7 +28,7 @@
             <img :src="getImgURL(item.content)" alt="" class='img-chat' @click.prevent='showImgPicker(item.content)'>
           </div>
           <!-- 语音 -->
-          <div class="card-bd card-bd-audio" v-else-if='item.content_type == 2' @click='play(item.content)'>
+          <div class="card-bd card-bd-audio" v-else-if='item.content_type == 2' @click='startPlay(index)'>
             {{ item.duration }}s <i class="iconfont icon-yuyinyou"></i>
           </div>
           <!-- 文字 -->
@@ -41,6 +41,7 @@
     </mt-loadmore>
 
     <div class="page-ft">
+      <!-- 文字表单 -->
       <form class="ft-form" @submit.prevent='submit' novalidate>
         <!-- <i class="iconfont icon-84qiehuanyuyin ft-icon"></i> -->
         <input type="text" class="ft-input" v-model='content'>
@@ -50,12 +51,13 @@
       <div class="ft-b">
         <v-uploader input-name='file' @uploaded='uploaded' icon='icon-tupian' class='ft-uploader'></v-uploader>
         <v-audio @success='sendAudio'></v-audio>
-        <!-- <i class="iconfont icon-84qiehuanyuyin ft-b-icon"></i> -->
       </div>
     </div>
 
+
     <!-- 语音播放器 -->
-    <audio ref='player' class='player'></audio>
+    <audio-player :options='playOptions' @change='changeTime'></audio-player>
+
     <img-picker :visible='visible' :imgs='imgs' @cancel='cancel'></img-picker>
   </section>
 </template>
@@ -66,10 +68,11 @@ import {mapState} from 'vuex';
 import VUploader  from '@/components/VUploader';
 import ImgPicker from '@/components/ImgPicker';
 import VAudio from '@/components/VAudio';
+import AudioPlayer from '@/components/AudioPlayer';
 
 export default {
   name: 'Chat',
-  components: { VUploader, ImgPicker, VAudio },
+  components: { VUploader, ImgPicker, VAudio, AudioPlayer },
   data() {
     return {
       form: {
@@ -87,6 +90,11 @@ export default {
 
       visible: false, // 图片弹窗显示状态
       imgs: [], //图片弹窗显示的图片数组
+
+      playOptions: {
+        index: '', //播放的语音索引
+        same: false, // 是否是同一个语音
+      }
     }
   },
 
@@ -136,10 +144,24 @@ export default {
 
 
   methods: {
-    // 点击语音播放相应的音频
-    play(url) {
-      this.$refs.player.src = this.getImgURL(url);
-      this.$refs.player.play();
+    // 播放音频
+    startPlay(index) {
+      if (index == this.playOptions.index) {
+        this.playOptions = {
+          index: index,         
+          same: true,
+        };
+      } else {
+        this.playOptions = {
+          index: index,         
+          same: false,
+        };
+      }
+    },
+
+    // 播放过程中修改该语音的显示时长
+    changeTime(data) {
+      this.recordList[data.index].duration = data.duration;
     },
 
     // 上传语音文件后的回调
@@ -156,9 +178,13 @@ export default {
     },
 
     // 点击图片事件
-    showImgPicker(imgs, index) {
+    showImgPicker(imgs) {
       this.imgs = [imgs];
-      this.visible = true;
+      if (this.isApp()) {
+        this.previewImage(this.imgs, 0);
+      } else {
+        this.visible = true;
+      }
     },
 
     // 上传图片后
@@ -301,6 +327,10 @@ export default {
     }
     .card-bd-pic {
       padding: 0 !important;
+      background: none !important;
+      &::before {
+        display: none !important;
+      }
     }
     .card-bd-audio {
       padding: .08rem .2rem !important;
@@ -338,7 +368,7 @@ export default {
       margin-left: .5rem;
       .card-bd {
         position: relative;
-        background-color: #fff;
+        background-color: @green-light;
         padding: .1rem .15rem;
         border-radius: .05rem;
         margin-right: .1rem;
@@ -349,7 +379,7 @@ export default {
           content: '';
           border-width: .08rem;
           border-style: solid;
-          border-color: transparent transparent transparent #fff;
+          border-color: transparent transparent transparent @green-light;
           position: absolute;
           right: -.16rem;
         }
@@ -382,7 +412,7 @@ export default {
       margin: 0 .1rem;
       border: none;
       border-radius: .05rem;
-      height: .3rem;
+      height: .35rem;
       padding: 0 .1rem;
       &:focus {
         outline: none;
@@ -390,7 +420,7 @@ export default {
     }
     .ft-icon {
       font-size: .24rem;
-      color: @blue;
+      color: @green-light;
     }
 
     .ft-b {
@@ -401,11 +431,11 @@ export default {
     }
 
     .ft-uploader {
-      width: .3rem;
-      height: .3rem;
+      width: .35rem;
+      height: .35rem;
       border: none;
       .icon {
-        font-size: .3rem;
+        font-size: .35rem;
       }
     }
     .ft-b-icon {

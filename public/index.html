@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="//images2015.cnblogs.com/blog/528573/201609/528573-20160902122334215-1428383567.png">
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1148199_ogudrgvpl4b.css">
     <style>
-      .welcome {
+      /*.welcome {
         width: 100%;
         height: 100%;
         z-index: 1000;
@@ -27,6 +27,21 @@
       .away {
         opacity: 0;
         transform: scale(1.5);
+      }*/
+      #vc {
+        position: fixed;
+        z-index: 999;
+        width: 50px;
+        height: 50px;
+        bottom: 60px;
+        right: 0;
+      }
+      #__vconsole {
+        display: none;
+      }
+      #__vconsole div.vc-switch {
+        bottom: 100px;
+        right: 10px;
       }
     </style>
   </head>
@@ -36,28 +51,63 @@
       <strong>We're sorry but vchat doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
 
+    <div id="app"></div>
+
+
+    <div id="vc"></div>
     <!--mask layer--> 
-    <div class="welcome" id="welcome"></div>
+    <!-- <div class="welcome" id="welcome"></div> -->
+    
+    <!-- vconsole插件 -->
+    <script src="lib/vconsole.min.js"></script>
     <script>
       (function() {
         'use strict';
 
-        var welcome = document.getElementById('welcome');
-        var index = Math.ceil(Math.random() * 5);
-        welcome.style.background = "url(/launch-" + index + ".jpg) no-repeat center/cover";
+        // vconsloe 点击vc七次召唤神龙
+        new VConsole();
+        var i = 0;
+        document.getElementById('vc').addEventListener('click', function(ev) {
+          if (i > 5) {
+            document.getElementById('__vconsole').style.display = 'block';
+          } else {
+            i++;
+          }
+        });
 
-        setTimeout(function() {
-          welcome.classList.add('away');
-        }, 1000);
-        setTimeout(function() {
-          welcome.parentNode.removeChild(welcome);
-        }, 2000);
+
+        // plus 初始化
+        if (window.plus) {
+          plusReady();
+        } else {
+          document.addEventListener('plusready', plusReady, false);
+        }
+
+        function plusReady() {
+          // 则设置状态栏背景色
+          plus.navigator.setStatusBarBackground('#ededed');
+        }
+
+
+        document.oncontextmenu = function() {
+          return false;
+        };
+
+        // 启动界面
+        // var welcome = document.getElementById('welcome');
+        // var index = Math.ceil(Math.random() * 5);
+        // welcome.style.background = "url(/launch/launch-" + index + ".png) no-repeat center/cover";
+
+        // setTimeout(function() {
+        //   welcome.classList.add('away');
+        // }, 1000);
+        // setTimeout(function() {
+        //   welcome.parentNode.removeChild(welcome);
+        // }, 2000);
       })();
     </script>
 
-    <div id="app"></div>
-
-    <script src="./lib/recorder.mp3.min.js"></script>
+    <script src="lib/recorder.mp3.min.js"></script>
     <!-- built files will be auto injected -->
   </body>
 </html>

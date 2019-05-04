@@ -1,10 +1,11 @@
+<!-- 图片预览组件  使用了两种方式 在app内调用plus.nativeUI来操作 否则调用mt-swipe -->
 <template>
-  <div class="img-picker" v-if='visible' @click='cancel'>
+  <section class="img-picker" v-if='visible' @click='cancel'>
     <div class="v-modal img-picker-modal"></div>
     <mt-swipe :auto="0" :show-indicators="false" :continuous='false' :default-index='index'>
       <mt-swipe-item v-for='item in imgs' ><img :src="getImgURL(item)" alt="" class="img-w"></mt-swipe-item>
     </mt-swipe>
-  </div>
+  </section>
 </template>
 
 

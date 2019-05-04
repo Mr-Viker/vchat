@@ -1,12 +1,12 @@
 <template>
   <section class="page find-page page-has-hd">
-    <mt-navbar v-model="selected" fixed class='hd-navbar' @click.native='rollBack'>
+    <mt-navbar v-model="selected" fixed class='hd-navbar'>
       <mt-tab-item id="1">广场</mt-tab-item>
       <mt-tab-item id="2">好友</mt-tab-item>
     </mt-navbar>
 
     <!-- tab-container -->
-    <mt-tab-container v-model="selected">
+    <mt-tab-container v-model="selected" id='container'>
       <mt-tab-container-item id="1" v-infinite-scroll="getPlazaMomentList" infinite-scroll-disabled="loading1" infinite-scroll-distance="100">
         <!-- 下拉刷新 -->
         <mt-loadmore :top-method="loadTop1" ref="loadmore1" :top-distance='50'>
@@ -22,7 +22,7 @@
             <!-- 内容 -->
             <div class="card-bd">{{item.content}}</div>
             <div class="card-ft">
-              <span class="img-container" v-for='(img, index) in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}" @click.prevent='showImgPicker(item.imgs, index)'></span>
+              <span class="img-container" v-for='(img, index) in item.imgs' @click.prevent='showImgPicker(item.imgs, index)'><img v-lazy='getImgURL(img)' class="img-full"></span>
             </div>
             <!-- 点赞评论 -->
             <div class="card-action">
@@ -56,7 +56,7 @@
             <!-- 内容 -->
             <div class="card-bd">{{item.content}}</div>
             <div class="card-ft">
-              <span class="img-container" v-for='img in item.imgs' :style="{background: 'url(' + getImgURL(img) + ') no-repeat center/cover'}"></span>
+              <span class="img-container" v-for='img in item.imgs' @click.prevent='showImgPicker(item.imgs, index)'><img v-lazy='getImgURL(img)' class="img-full"></span>
             </div>
             <!-- 点赞评论 -->
             <div class="card-action">
@@ -232,37 +232,39 @@ export default {
     },
 
 
-    // 双击回滚到顶部
-    rollBack(ev) {
-      var now = Date.now();
-      if (now - this.lastClickTime < 500) {
-        var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-        var time = scrollTop > window.innerHeight ? 300 : 100; // 总共需要多少时间
-        var speed = Math.ceil(scrollTop * 20 / time);
+    // 双击tab回滚到顶部
+    // rollBack(ev) {
+    //   var now = Date.now();
+    //   if (now - this.lastClickTime < 500) {
+    //     var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+    //     var time = scrollTop > window.innerHeight ? 300 : 100; // 总共需要多少时间
+    //     var speed = Math.ceil(scrollTop * 20 / time);
 
-        this.timer = setInterval(() => {
-          var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-          if (scrollTop <= 0) {
-            clearInterval(this.timer);
-          } else {
-            window.scrollTo(0, scrollTop - speed);
-          }
-        }, 20);
-      } else {
-        this.lastClickTime = now;
-      }
-    },
+    //     this.timer = setInterval(() => {
+    //       var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+    //       if (scrollTop <= 0) {
+    //         clearInterval(this.timer);
+    //       } else {
+    //         window.scrollTo(0, scrollTop - speed);
+    //       }
+    //     }, 20);
+    //   } else {
+    //     this.lastClickTime = now;
+    //   }
+    // },
 
     // 广场tab下拉刷新
     loadTop1() {
       // this.plazaMomentList = [];
-      this.$store.commit('setPlazaMomentList', []);
       this.page1 = 1;
       this.loading1 = false;
       this.complete1 = false;
       this.scrollTop1 = 0;
       this.getPlazaMomentList()
       .then(res => {
+        if (res.code == '00') {
+          this.$store.commit('setPlazaMomentList', res.data);
+        }
         this.$refs.loadmore1.onTopLoaded();
       })
     },
@@ -270,13 +272,15 @@ export default {
     // 好友tab下拉刷新
     loadTop2() {
       // this.friendMomentList = [];
-      this.$store.commit('setFriendMomentList', []);
       this.page2 = 1;
       this.loading2 = false;
       this.complete2 = false;
       this.scrollTop2 = 0;
       this.getFriendMomentList()
       .then(res => {
+        if (res.code == '00') {
+          this.$store.commit('setFriendMomentList', res.data);
+        }
         this.$refs.loadmore2.onTopLoaded();
       })
     },
@@ -340,12 +344,30 @@ export default {
 
     // 点击图片事件
     showImgPicker(imgs, index) {
-      this.imgs = imgs;
-      this.index = index;
-      this.visible = true;
+      if (this.isApp()) {
+        this.previewImage(imgs, index);
+      } else {
+        this.imgs = imgs;
+        this.index = index;
+        this.visible = true;
+      }
     },
 
   },
+
+  beforeRouteEnter(to, from, next) {
+    if (window.plus) {
+      plus.navigator.setStatusBarBackground('#fff');
+    }
+    next();
+  },
+
+  beforeRouteLeave(to, from, next) {
+    if (window.plus) {
+      plus.navigator.setStatusBarBackground('#ededed');
+    }
+    next();
+  }
 
 }
 </script>
@@ -368,7 +390,7 @@ export default {
       }
     }
     .mint-tab-item-label {
-      font-size: .15rem;
+      font-size: .16rem;
     }
   }
 

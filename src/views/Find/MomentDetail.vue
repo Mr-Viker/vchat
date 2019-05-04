@@ -11,7 +11,7 @@
       <div class="hd-c">
         <div>{{ detail.content }}</div>
         <div class="hd-c-imgs">
-          <img :src="getImgURL(img)" alt="" v-for='(img, index) in detail.imgs' class="img-moment" @click='showImgPicker(detail.imgs, index)'>
+          <img v-lazy="getImgURL(img)" v-for='(img, index) in detail.imgs' class="img-moment" @click='showImgPicker(detail.imgs, index)'>
         </div>
       </div>
       <!-- 点赞评论 -->
@@ -99,9 +99,13 @@ export default {
 
     // 点击图片事件
     showImgPicker(imgs, index) {
-      this.imgs = imgs;
-      this.index = index;
-      this.visible = true;
+      if (this.isApp()) {
+        this.previewImage(imgs, index);
+      } else {
+        this.imgs = imgs;
+        this.index = index;
+        this.visible = true;
+      }
     },
 
     // 评论别人的评论
