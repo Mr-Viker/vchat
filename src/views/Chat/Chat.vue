@@ -94,7 +94,8 @@ export default {
       playOptions: {
         index: '', //播放的语音索引
         same: false, // 是否是同一个语音
-      }
+      },
+      submitting: false, // 提交状态
     }
   },
 
@@ -224,6 +225,9 @@ export default {
 
     // 发送
     submit() {
+      if (this.submitting) {return;}
+      this.submitting = true;
+
       if (!this.form.content_type) {
         this.form.content = this.content;
       }
@@ -256,9 +260,11 @@ export default {
           } else {
             this.$toast(res.msg);
           }
+          this.submitting = false;
         }).catch(err => {
           this.resetForm();
           this.$toast({message: '连接IM超时, 已缓存至数据库，稍后请刷新消息记录以确认是否发送成功', duration: 5000});
+          this.submitting = false;
         })
       }
     },

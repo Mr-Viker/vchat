@@ -79,6 +79,7 @@ export default {
 
     // web开始录音
     start2() {
+      this.closeRecordToast();
       this.showReordToast();
 
       this.audio.open(() => {

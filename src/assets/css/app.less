@@ -31,8 +31,12 @@ a:focus {
 }
 
 * {
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
   -moz-user-focus: none;
+}
+input {      
+  user-select:auto;
 }
 
 
@@ -178,11 +182,12 @@ a:focus {
   height: 30vw;
   margin-right: .1rem;
   margin-bottom: .1rem;
+  overflow: hidden;
 }
 .img-full {
   display: inline-block;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 img[lazy=loading] {
   display: inline-block;
