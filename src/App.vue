@@ -28,8 +28,7 @@ export default {
   },
 
   created() {
-    this.getConfig()
-    .then(res => {
+    this.getConfig().then(res => {
       if (window.localStorage.getItem('token')) {
         return this.getUserInfo();
       }
